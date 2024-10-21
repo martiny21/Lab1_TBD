@@ -10,7 +10,7 @@ CREATE TABLE cliente(
 );
 
 --Crear tabla categoria
-CREATE TABLE categoría (
+CREATE TABLE categoria (
 	id_categoria SERIAL PRIMARY KEY,
 	nombre VARCHAR(100) NOT NULL
 );
@@ -19,12 +19,12 @@ CREATE TABLE categoría (
 CREATE TABLE producto (
 	id_producto SERIAL PRIMARY KEY,
 	nombre VARCHAR(255) NOT NULL,
-	descripción TEXT,
+	descripcion TEXT,
 	precio DECIMAL(10, 2),
 	stock INT NOT NULL,
 	estado VARCHAR(50) NOT NULL,
 	id_categoria INTEGER,
-	FOREIGN KEY (id_categoria) REFERENCES categoría (id_categoria)
+	FOREIGN KEY (id_categoria) REFERENCES categoria (id_categoria)
 );
 
 
