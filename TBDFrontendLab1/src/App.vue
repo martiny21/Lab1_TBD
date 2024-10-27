@@ -1,11 +1,12 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
 import Home from './components/Home.vue'
+import Register from './components/Register.vue'
 </script>
 
 
 <template>
-  <Home />
+  <Register />
 </template>
 
 <!--
