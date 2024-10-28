@@ -2,11 +2,14 @@
 import HelloWorld from './components/HelloWorld.vue'
 import Home from './components/Home.vue'
 import Register from './components/Register.vue'
+import ProductList from './components/ProductList.vue';
+import Clients from './components/Clients.vue';
+
 </script>
 
 
 <template>
-  <Register />
+  <Clients />
 </template>
 
 <!--
