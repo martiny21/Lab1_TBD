@@ -1,28 +1,41 @@
 <template>
-    <title>
-        Página principal
-    </title>
-    <h1>
-        Bienvenido a la página principal de E-commerce
-    </h1>
-    <p>
-        donde se gestionen productos, órdenes de compra, clientes y el inventario en tiempo real.
-    </p>
-
+    <div class="card">
+        <title>
+            Página principal
+        </title>
+        <h1>
+            Bienvenido a la página principal de E-commerce
+        </h1>
+        <p>
+            donde se gestionen productos, órdenes de compra, clientes y el inventario en tiempo real.
+        </p>
+    </div>
     <div>
         <button>
-            registro de usuario
+            <router-link to="/register">
+                Registro de usuario
+            </router-link>
         </button>
         <button>
-            inicio de sesión
+            <router-link to="/login">
+                Inicio de sesión
+            </router-link>
         </button>
     </div>
 </template>
 
 <style>
+    .card {
+        margin: 20px;
+        padding: 20px;
+        border: 5px solid #3a777b;
+        border-radius: 5px;
+        flex: auto;
+    }
     h1 {
         text-align: center;
     }
+
     button {
         margin: 10px;
         justify-content: center;
@@ -34,5 +47,10 @@
         border-radius: 5px;
         cursor: pointer;
     }
-</style>
 
+    .button-link {
+        text-decoration: none;
+        color: white;
+    }
+
+</style>
