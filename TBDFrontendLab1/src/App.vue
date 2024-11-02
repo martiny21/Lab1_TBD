@@ -5,6 +5,9 @@ import Register from './components/Register.vue'
 import ProductList from './components/ProductList.vue';
 import Clients from './components/Clients.vue';
 
+import ProductList from './components/ProductList.vue';
+import Clients from './components/Clients.vue';
+
 </script>
 
 
