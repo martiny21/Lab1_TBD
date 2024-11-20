@@ -9,12 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ClientEntity {
 
-    private Long idClient;
-    private String clientName;
-    private String direction;
+    private Integer id_cliente;
+    private String nombre;
+    private String direccion;
     private String email;
-    private String clientPassword;
-    private String clientNumber;
-    private Boolean isAdmin;
-
+    private String telefono;
+    private String contrasena;
+    private boolean es_admin;
 }

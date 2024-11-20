@@ -5,6 +5,6 @@ import com.example.TBDBackendLab1.persistence.entity.ClientEntity;
 public interface ClientRepository {
 
     ClientEntity addClient(ClientEntity client);
-    ClientEntity getById(Long id);
+    ClientEntity getById(Integer id);
     ClientEntity getByEmail(String email);
 }

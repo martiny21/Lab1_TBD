@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.sql2o.Sql2o;
 
 @Repository
-public class OrderDetailRepositoryImplementation implements OrderDetailRepository {
+public class OrderDetailRepositoryImplementation  {
 
     @Autowired
     private Sql2o sql2o;

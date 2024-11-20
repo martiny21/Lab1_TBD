@@ -12,16 +12,16 @@ public class CategoryRepositoryImplementation implements CategoryRepository{
     private Sql2o sql2o;
     @Override
     public CategoryEntity addCategory(CategoryEntity category) {
-        String sql = "INSERT INTO category (category_name)" +
-                "VALUES (:categoryName)";
+        String sql = "INSERT INTO categoria (nombre)" +
+                "VALUES (:nombre)";
 
         try (org.sql2o.Connection con = sql2o.open()) {
-            Long generatedId = (Long) con.createQuery(sql, true)
-                    .addParameter("category_name", category.getCategoryName())
+            Integer generatedId = (Integer) con.createQuery(sql, true)
+                    .addParameter("nombre", category.getNombre())
                     .executeUpdate()
                     .getKey();
 
-            category.setIdCategory(generatedId);
+            category.setId_categoria(generatedId);
             return category;
         } catch (Exception e) {
             e.printStackTrace();
@@ -30,10 +30,10 @@ public class CategoryRepositoryImplementation implements CategoryRepository{
     }
 
     @Override
-    public CategoryEntity getById(Long id) {
+    public CategoryEntity getById(Integer id) {
         try(org.sql2o.Connection con = sql2o.open()){
-            return con.createQuery("SELECT * FROM categoty WHERE id=:id_category")
-                    .addParameter("id_category",id)
+            return con.createQuery("SELECT * FROM categoria WHERE id_categoria=:id_categoria")
+                    .addParameter("id_categoria",id)
                     .executeAndFetchFirst(CategoryEntity.class);
         }
     }

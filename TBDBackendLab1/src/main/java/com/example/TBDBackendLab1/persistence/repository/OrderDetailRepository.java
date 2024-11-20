@@ -6,7 +6,7 @@ import java.util.List;
 public interface OrderDetailRepository {
 
     OrderDetailEntity addOrderDetail(OrderDetailEntity order);
-    OrderDetailEntity getById(Long id);
-    List<OrderDetailEntity> getByIdOrder(Long id);
-    List<OrderDetailEntity> getByIdProduct(Long id);
+    OrderDetailEntity getById(Integer id);
+    List<OrderDetailEntity> getByIdOrder(Integer id);
+    List<OrderDetailEntity> getByIdProduct(Integer id);
 }
