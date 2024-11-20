@@ -23,6 +23,7 @@ CREATE TABLE client (
     name VARCHAR(255) NOT NULL,
     direction VARCHAR(255),
     email VARCHAR(100) UNIQUE NOT NULL,
+    client_password VARCHAR(100) UNIQUE NOT NULL,
     number VARCHAR(20)
 );
 

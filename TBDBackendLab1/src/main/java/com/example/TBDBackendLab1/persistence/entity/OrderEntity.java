@@ -4,16 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClientEntity {
+public class OrderEntity {
 
+    private Long idOrder;
+    private Date orderDate;
+    private String state;
     private Long idClient;
-    private String clientName;
-    private String direction;
-    private String email;
-    private String clientPassword;
-    private String clientNumber;
-
+    private Double total;
 }

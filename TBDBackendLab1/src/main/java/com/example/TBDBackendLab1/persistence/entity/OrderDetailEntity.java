@@ -7,13 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductEntity {
+public class OrderDetailEntity {
 
+    private Long idDetail;
+    private Long idOrder;
     private Long idProduct;
-    private String productName;
-    private String description;
-    private Double price;
-    private int stock;
-    private String state;
-    private Long idCategory;
+    private Double amount;
+    private Double unitPrice;
 }
