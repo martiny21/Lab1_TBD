@@ -1,4 +1,15 @@
 package com.example.TBDBackendLab1.persistence.repository;
 
-public class OrderDetailRepositoryImplementation {
+import com.example.TBDBackendLab1.persistence.entity.ClientEntity;
+import com.example.TBDBackendLab1.persistence.entity.OrderDetailEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.sql2o.Sql2o;
+
+@Repository
+public class OrderDetailRepositoryImplementation implements OrderDetailRepository {
+
+    @Autowired
+    private Sql2o sql2o;
+
 }

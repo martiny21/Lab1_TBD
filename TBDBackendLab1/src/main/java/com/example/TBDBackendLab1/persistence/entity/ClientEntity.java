@@ -15,5 +15,6 @@ public class ClientEntity {
     private String email;
     private String clientPassword;
     private String clientNumber;
+    private Boolean isAdmin;
 
 }
