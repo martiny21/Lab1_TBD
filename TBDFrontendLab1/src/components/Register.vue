@@ -51,10 +51,6 @@ label {
     display: flex;
 }
 
-.form-group {
-    margin: 10px;
-}
-
 input {
     width: 100%;
     padding: 10px;
@@ -74,6 +70,18 @@ input:focus {
     background-color: #f9f9f9;
 }
 
+.card {
+        margin: 20px;
+        padding: 20px;
+        border: 5px solid #3a777b;
+        background-color: #ffffff;
+        color: #3a777b;
+        border-radius: 5px;
+        flex: auto;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
 
 .box {
     width: 100%;
@@ -88,6 +96,7 @@ input:focus {
     border: 5px solid #3a777b;
     border-radius: 5px;
     color: #3a777b;
+    flex: auto;
 }
 
 
