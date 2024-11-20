@@ -1,10 +1,11 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import Home from './components/Home.vue'
-import Register from './components/Register.vue'
-import Clients from './components/Clients.vue';
-import ProductList from './components/ProductList.vue';
-
+import home from './views/home.vue'
+import register from './views/register.vue'
+import login from './views/login.vue'
+import productList from './views/productList.vue'
+import clients from './views/clients.vue'
+import logged from './views/logged.vue'
+import order from './views/order.vue'
 
 </script>
 
