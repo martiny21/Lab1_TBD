@@ -1,20 +1,18 @@
 <template>
     <div class="box">
-        <h2>Lista de Clientes</h2>
-        <ul>
-            <li v-for="client in clients" :key="client.id">
-                <p>Nombre: {{ client.name }}</p>
-                <p>Dirección: {{ client.address }}</p>
-                <p>Correo Electrónico: {{ client.email }}</p>
-                <p>Teléfono: {{ client.phone }}</p>
-                <h3>Historial de Compras</h3>
-                <ul>
-                    <li v-for="purchase in client.purchaseHistory" :key="purchase.id">
-                        {{ purchase.details }}
-                    </li>
-                </ul>
-            </li>
-        </ul>
+        <h1>Login</h1>
+        <form>
+        <div class="form-group">
+            <label for="email">Correo</label>
+            <input type="email" class="form-control" id="email" v-model= "email">
+        </div>
+        <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input type="password" class="form-control" id="password" v-model= "password">
+        </div>
+        </form>
+        <button type="submit" class="btn btn-primary" @click="login">Login</button>
+        <a href="/" class="redirect-link">Volver</a>
     </div>
 </template>
 
@@ -22,33 +20,14 @@
 export default {
     data() {
         return {
-            newClient: {
-                name: '',
-                address: '',
-                email: '',
-                phone: '',
-                purchaseHistory: []
-            },
-            clients: []
+            email: '',
+            password: ''
         };
-    },
-    methods: {
-        addClient() {
-            const newClient = { ...this.newClient, id: Date.now() };
-            this.clients.push(newClient);
-            this.newClient = {
-                name: '',
-                address: '',
-                email: '',
-                phone: '',
-                purchaseHistory: []
-            };
-        }
     }
 };
 </script>
 
-<style scoped>
+<style>
 h1 {
     text-align:center;
 }
@@ -115,4 +94,5 @@ button {
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
 </style>

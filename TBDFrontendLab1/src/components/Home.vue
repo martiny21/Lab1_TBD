@@ -29,6 +29,8 @@
         margin: 20px;
         padding: 20px;
         border: 5px solid #3a777b;
+        background-color: #ffffff;
+        color: #3a777b;
         border-radius: 5px;
         flex: auto;
     }
