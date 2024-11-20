@@ -12,20 +12,21 @@ public class ClientRepositoryImplementation implements ClientRepository{
     private Sql2o sql2o;
     @Override
     public ClientEntity addClient(ClientEntity client) {
-        String sql = "INSERT INTO client (client_name, direction, email, client_password,client_number)" +
-                "VALUES (:clientName, :direction, :email, :clientPassword, :clientNumber)";
+        String sql = "INSERT INTO cliente (nombre, direccion, email, telefono, contrasena, es_admin)" +
+                "VALUES (:nombre, :direccion, :email, :telefono, :contrasena, :es_admin)";
 
         try (org.sql2o.Connection con = sql2o.open()) {
-            Long generatedId = (Long) con.createQuery(sql, true)
-                    .addParameter("client_name", client.getClientName())
-                    .addParameter("direction", client.getDirection())
+            Integer generatedId = (Integer) con.createQuery(sql, true)
+                    .addParameter("nombre", client.getNombre())
+                    .addParameter("direccion", client.getDireccion())
                     .addParameter("email", client.getEmail())
-                    .addParameter("client_password", client.getClientPassword())
-                    .addParameter("client_number", client.getClientNumber())
+                    .addParameter("telefono", client.getTelefono())
+                    .addParameter("contrasena", client.getContrasena())
+                    .addParameter("es_admin", client.isEs_admin())
                     .executeUpdate()
                     .getKey();
 
-            client.setIdClient(generatedId);
+            client.setId_cliente(generatedId);
             return client;
         } catch (Exception e) {
             e.printStackTrace();
@@ -34,10 +35,10 @@ public class ClientRepositoryImplementation implements ClientRepository{
     }
 
     @Override
-    public ClientEntity getById(Long id) {
+    public ClientEntity getById(Integer id) {
         try(org.sql2o.Connection con = sql2o.open()){
-            return con.createQuery("SELECT * FROM client WHERE id=:id_client")
-                    .addParameter("id_client",id)
+            return con.createQuery("SELECT * FROM cliente WHERE id_cliente=:id_cliente")
+                    .addParameter("id_cliente",id)
                     .executeAndFetchFirst(ClientEntity.class);
         }
     }
@@ -45,7 +46,7 @@ public class ClientRepositoryImplementation implements ClientRepository{
     @Override
     public ClientEntity getByEmail(String email) {
         try(org.sql2o.Connection con = sql2o.open()){
-            return con.createQuery("SELECT * FROM client WHERE email=:email")
+            return con.createQuery("SELECT * FROM cliente WHERE email=:email")
                     .addParameter("email",email)
                     .executeAndFetchFirst(ClientEntity.class);
         }
