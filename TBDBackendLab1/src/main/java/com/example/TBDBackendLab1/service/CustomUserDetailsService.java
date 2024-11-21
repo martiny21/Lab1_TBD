@@ -16,13 +16,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        ClientEntity clientEntity = clientRepository.getByEmail(email);
-        if (clientEntity == null){
+        ClientEntity client = clientRepository.getByEmail(email);
+        if (client == null){
             throw new UsernameNotFoundException("User not found");
         }
         return User.builder()
-                .username(clientEntity.getEmail())
-                .password(clientEntity.getContrasena()) // Asegúrate de que la contraseña esté encriptada
+                .username(client.getEmail())
+                .password(client.getClientPassword()) // Asegúrate de que la contraseña esté encriptada
                 .build();
     }
 }

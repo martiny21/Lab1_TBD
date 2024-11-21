@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryEntity {
+public class ClientQueryReport {
 
-    private Integer category_id;
-    private String category_name;
+    private Integer client_id;
+    private Integer query_count;
 }

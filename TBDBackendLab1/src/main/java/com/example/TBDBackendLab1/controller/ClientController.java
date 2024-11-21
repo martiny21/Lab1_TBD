@@ -1,6 +1,7 @@
 package com.example.TBDBackendLab1.controller;
 
 import com.example.TBDBackendLab1.persistence.entity.ClientEntity;
+import com.example.TBDBackendLab1.persistence.entity.ClientQueryReport;
 import com.example.TBDBackendLab1.service.ClientService;
 import com.example.TBDBackendLab1.dto.LoginDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.TBDBackendLab1.configs.JwtUtil;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/client")
+@CrossOrigin("*")
 public class ClientController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
@@ -32,30 +35,10 @@ public class ClientController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping("getemail/{email}")
-    public ResponseEntity<ClientEntity> getEmail(@PathVariable String email) {
-        ClientEntity client = clientService.getByEmail(email);
-        if (client != null) {
-            return ResponseEntity.ok(client);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping("/get/{id}")
-    public ResponseEntity<ClientEntity> getUser(@PathVariable Integer id){
-        ClientEntity client = clientService.getById(id);
-        if(client != null){
-            return ResponseEntity.ok(client);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @PostMapping("/register")
     public ResponseEntity<Void> registerUser(@RequestBody ClientEntity client) {
         try {
-            client.setContrasena(passwordEncoder.encode((client.getContrasena())));
+            client.setClient_password(passwordEncoder.encode((client.getClient_password())));
             clientService.addClient(client); // Guardar cliente
             return ResponseEntity.ok().build();
         } catch (Exception e) {
@@ -66,7 +49,7 @@ public class ClientController {
 
     @PostMapping("/login")
     public LoginDto login(@RequestParam("email") String email,
-                          @RequestParam("contrasena") String password){
+                          @RequestParam("password") String password){
         try {
             UsernamePasswordAuthenticationToken login = new UsernamePasswordAuthenticationToken(email, password);
             Authentication authentication = authenticationManager.authenticate(login);
@@ -79,5 +62,30 @@ public class ClientController {
         } catch (BadCredentialsException e) {
             return new LoginDto();
         }
+    }
+
+    @GetMapping("/getByEmail/{email}")
+    public ResponseEntity<ClientEntity> getByEmail(@PathVariable String email) {
+        ClientEntity client = clientService.getByEmail(email);
+        if (client != null) {
+            return ResponseEntity.ok(client);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<ClientEntity> getById(@PathVariable Integer id){
+        ClientEntity client = clientService.getById(id);
+        if(client != null){
+            return ResponseEntity.ok(client);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getReports")
+    public List<ClientQueryReport> getReports(){
+        return clientService.getReports();
     }
 }

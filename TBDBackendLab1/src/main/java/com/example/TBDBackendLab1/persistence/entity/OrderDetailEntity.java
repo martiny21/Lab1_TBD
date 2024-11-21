@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OrderDetailEntity {
 
-    private Integer id_detalle;
-    private Integer id_orden;
-    private Integer id_producto;
-    private Integer cantidad;
-    private Double precio_unitario;
+    private Integer detail_id;
+    private Integer order_id;
+    private Integer product_id;
+    private Integer amount;
+    private Double unit_price;
 }

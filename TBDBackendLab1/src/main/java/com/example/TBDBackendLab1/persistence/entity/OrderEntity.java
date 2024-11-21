@@ -11,9 +11,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class OrderEntity {
 
-    private Integer id_orden;
-    private LocalDate fecha_orden;
-    private String estado;
-    private Integer id_cliente;
+    private Integer order_id;
+    private LocalDate order_date;
+    private String estate;
+    private Integer client_id;
     private Double total;
 }

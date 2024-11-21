@@ -7,6 +7,6 @@ import java.util.List;
 public interface OrderRepository {
 
     OrderEntity addOrder(OrderEntity order);
-    OrderEntity getById(Integer id);
-    List<OrderEntity> getByIdClient(Integer idClient);
+    OrderEntity getById(Integer order_id);
+    List<OrderEntity> getByClientId(Integer client_id);
 }
