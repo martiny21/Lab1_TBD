@@ -1,7 +1,7 @@
 <template>
     <div class="box">
         <h1>Registro</h1>
-        <form>
+        <form @submit.prevent="registerClient">
             <div>
                 <label for="name">Nombre:</label>
                 <input type="text" v-model="name" required />
@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
@@ -38,6 +40,36 @@ export default {
             direction: '',
             password: ''
         };
+    },
+    methods: {
+        async registerClient() {
+            try {
+                const clientData = {
+                    client_name: this.name,
+                    email: this.email,
+                    client_number: this.number,
+                    direction: this.direction,
+                    client_password: this.password
+                };
+
+                const response = await axios.post('http://localhost:8080/client/register', clientData);
+
+                if (response.status === 200) {
+                    alert('Registro exitoso');
+                    this.clearForm();
+                }
+            } catch (error) {
+                console.error('Error al registrar el cliente:', error);
+                alert('Hubo un error al registrar. Intenta de nuevo.');
+            }
+        },
+        clearForm() {
+            this.name = '';
+            this.email = '';
+            this.number = '';
+            this.direction = '';
+            this.password = '';
+        }
     }
 };
 </script>
@@ -119,4 +151,3 @@ button {
     margin-bottom: 20px;
 }
 </style>
-  

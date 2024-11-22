@@ -1,35 +1,75 @@
 <template>
     <div class="box">
-        <h1>Login</h1>
-        <form>
+      <h1>Login</h1>
+      <form @submit.prevent="login"> <!-- Prevenir el comportamiento por defecto del formulario -->
         <div class="form-group">
-            <label for="email">Correo</label>
-            <input type="email" class="form-control" id="email" v-model= "email">
+          <label for="email">Correo</label>
+          <input type="email" class="form-control" id="email" v-model="email" required />
         </div>
         <div class="form-group">
-            <label for="password">Contraseña</label>
-            <input type="password" class="form-control" id="password" v-model= "password">
+          <label for="password">Contraseña</label>
+          <input type="password" class="form-control" id="password" v-model="password" required />
         </div>
-        </form>
-        <button type="submit" class="btn btn-primary" @click="login">
-            <router-link to="/logged">
-            Login
-            </router-link>
+        <button type="submit" class="btn btn-primary">
+          Login
         </button>
         <a href="/" class="redirect-link">Volver</a>
+      </form>
     </div>
-</template>
+  </template>
 
-<script>
-export default {
+  <script>
+  import axios from "axios";
+
+  export default {
     data() {
-        return {
-            email: '',
-            password: ''
-        };
+      return {
+        email: "",
+        password: "",
+      };
+    },
+    methods: {
+        async login() {
+  try {
+    const params = new URLSearchParams();
+    params.append("email", this.email);
+    params.append("password", this.password);
+
+    const response = await axios.post("http://localhost:8080/client/login", params, {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    });
+
+    const token = response.data.token;
+    if (token) {
+      // Obtener al usuario a través del email
+      const userResponse = await axios.get(`http://localhost:8080/client/getByEmail/${this.email}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      localStorage.setItem("isLogged", true);
+      localStorage.setItem("userLogged", JSON.stringify(userResponse.data));
+
+      // Guardar el token en el almacenamiento local o sesión
+      localStorage.setItem("jwt", token);
+
+      // Redirigir al usuario
+      alert("Inicio de sesión exitoso.");
+      this.$router.push("/logged"); // Descomenta esta línea si tienes una ruta definida
+    } else {
+      alert("Credenciales incorrectas");
     }
-};
-</script>
+  } catch (error) {
+    console.error("Error al iniciar sesión:", error);
+    alert("Error al iniciar sesión");
+  }
+},
+    },
+
+  };
+  </script>
+
 
 <style>
 h1 {
