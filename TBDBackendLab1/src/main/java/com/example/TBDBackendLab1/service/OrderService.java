@@ -17,7 +17,7 @@ public class OrderService {
         return orderRepository.addOrder(order);
     }
 
-    public OrderEntity getById(Integer order_id){
+    public OrderEntity getById(Integer order_id) {
         return orderRepository.getById(order_id);
     }
 

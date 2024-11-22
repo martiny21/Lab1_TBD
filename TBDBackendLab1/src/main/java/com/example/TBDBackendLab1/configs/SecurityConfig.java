@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize // Configura las rutas que requieren autenticación
                         .requestMatchers("client/login").permitAll() // Todos pueden acceder
                         .requestMatchers("client/register").permitAll()
+                        .requestMatchers("order/getById/**").permitAll()
                         .anyRequest().authenticated() // Todas las demás rutas requieren autenticación
                 )
                 .sessionManagement(session -> session // Configura la política de creación de sesiones

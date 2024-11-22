@@ -21,7 +21,7 @@ public class ClientRepositoryImplementation implements ClientRepository{
 
         try (org.sql2o.Connection con = sql2o.open()) {
             Integer generatedId = (Integer) con.createQuery(sql, true)
-                    .addParameter("client_name", client.getClient_id())
+                    .addParameter("client_name", client.getClient_name())
                     .addParameter("direction", client.getDirection())
                     .addParameter("email", client.getEmail())
                     .addParameter("client_number", client.getClient_number())

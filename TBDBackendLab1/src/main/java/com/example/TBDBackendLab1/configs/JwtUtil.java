@@ -21,7 +21,7 @@ public class JwtUtil {
                 .withSubject(useremail)      //
                 .withIssuer("app")
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(10)))
+                .withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(60)))
                 .sign(ALGORITHM);
     }
 

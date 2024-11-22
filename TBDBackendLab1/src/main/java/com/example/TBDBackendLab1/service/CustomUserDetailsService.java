@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         return User.builder()
                 .username(client.getEmail())
-                .password(client.getClientPassword()) // Asegúrate de que la contraseña esté encriptada
+                .password(client.getClient_password()) // Asegúrate de que la contraseña esté encriptada
                 .build();
     }
 }

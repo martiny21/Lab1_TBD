@@ -1,5 +1,6 @@
 package com.example.TBDBackendLab1.persistence.repository;
 
+import com.example.TBDBackendLab1.persistence.entity.ClientEntity;
 import com.example.TBDBackendLab1.persistence.entity.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -22,7 +23,7 @@ public class ProductRepositoryImplementation implements ProductRepository {
             Integer generatedId = (Integer) con.createQuery(sql, true)
                     .addParameter("product_name", product.getProduct_name())
                     .addParameter("product_desc", product.getProduct_desc())
-                    .addParameter("price", product.getEstate())
+                    .addParameter("price", product.getPrice())
                     .addParameter("stock", product.getStock())
                     .addParameter("estate", product.getEstate())
                     .addParameter("category_id", product.getCategory_id())
@@ -51,7 +52,7 @@ public class ProductRepositoryImplementation implements ProductRepository {
         try(org.sql2o.Connection con = sql2o.open()){
             return con.createQuery("SELECT * FROM product WHERE category_id=:category_id")
                     .addParameter("category_id",category_id)
-                    .executeAndFetchFirst(List.class);
+                    .executeAndFetch(ProductEntity.class);
         }
     }
 }

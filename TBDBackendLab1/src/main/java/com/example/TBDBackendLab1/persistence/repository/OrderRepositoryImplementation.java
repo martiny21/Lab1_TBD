@@ -1,6 +1,5 @@
 package com.example.TBDBackendLab1.persistence.repository;
 
-import com.example.TBDBackendLab1.persistence.entity.OrderDetailEntity;
 import com.example.TBDBackendLab1.persistence.entity.OrderEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -23,7 +22,7 @@ public class OrderRepositoryImplementation implements OrderRepository {
             Integer generatedId = (Integer) con.createQuery(sql, true)
                     .addParameter("order_date", order.getOrder_date())
                     .addParameter("estate", order.getEstate())
-                    .addParameter("client_id", order.getOrder_id())
+                    .addParameter("client_id", order.getClient_id())
                     .addParameter("total", order.getTotal())
                     .executeUpdate()
                     .getKey();
@@ -37,21 +36,21 @@ public class OrderRepositoryImplementation implements OrderRepository {
     }
 
     @Override
-    public OrderEntity getById(Integer detail_id) {
+    public OrderEntity getById(Integer order_id) {
         try(org.sql2o.Connection con = sql2o.open()){
-            return con.createQuery("SELECT * FROM order_info WHERE detail_id=:detail_id")
-                    .addParameter("detail_id",detail_id)
+            return con.createQuery("SELECT * FROM order_info WHERE order_id=:order_id")
+                    .addParameter("order_id",order_id)
                     .executeAndFetchFirst(OrderEntity.class);
         }
     }
 
     @Override
-    public List<OrderEntity> getByClientId(Integer client_id) {
-        try(org.sql2o.Connection con = sql2o.open()){
-            return con.createQuery("SELECT * FROM order_info WHERE client_id=:client_id")
-                    .addParameter("client_id",client_id)
-                    .executeAndFetchFirst(List.class);
+    public List<OrderEntity> getByClientId(Integer clientId) {
+        String sql = "SELECT order_id, order_date, estate, client_id, total FROM order_info WHERE client_id = :client_id";
+        try (org.sql2o.Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .addParameter("client_id", clientId)
+                    .executeAndFetch(OrderEntity.class);
         }
     }
-
 }

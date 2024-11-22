@@ -84,6 +84,7 @@ public class ClientController {
         }
     }
 
+    // tema de triggers, por probar
     @GetMapping("/getReports")
     public List<ClientQueryReport> getReports(){
         return clientService.getReports();

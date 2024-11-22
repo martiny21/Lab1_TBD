@@ -50,7 +50,7 @@ public class OrderDetailRepositoryImplementation implements OrderDetailRepositor
         try(org.sql2o.Connection con = sql2o.open()){
             return con.createQuery("SELECT * FROM order_detail WHERE order_id=:order_id")
                     .addParameter("order_id",order_id)
-                    .executeAndFetchFirst(List.class);
+                    .executeAndFetch(OrderDetailEntity.class);
         }
     }
 
@@ -59,7 +59,7 @@ public class OrderDetailRepositoryImplementation implements OrderDetailRepositor
         try(org.sql2o.Connection con = sql2o.open()){
             return con.createQuery("SELECT * FROM order_detail WHERE product_id=:product_id")
                     .addParameter("product_id",product_id)
-                    .executeAndFetchFirst(List.class);
+                    .executeAndFetch(OrderDetailEntity.class);
         }
     }
 

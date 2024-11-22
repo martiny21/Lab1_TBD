@@ -17,7 +17,7 @@ public class CategoryRepositoryImplementation implements CategoryRepository{
 
         try (org.sql2o.Connection con = sql2o.open()) {
             Integer generatedId = (Integer) con.createQuery(sql, true)
-                    .addParameter("categoryName", category.getCategory_name())
+                    .addParameter("category_name", category.getCategory_name())
                     .executeUpdate()
                     .getKey();
 
