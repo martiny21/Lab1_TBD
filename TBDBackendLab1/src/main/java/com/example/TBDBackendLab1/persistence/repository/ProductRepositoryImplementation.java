@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.sql2o.Sql2o;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -55,4 +56,17 @@ public class ProductRepositoryImplementation implements ProductRepository {
                     .executeAndFetch(ProductEntity.class);
         }
     }
+
+    @Override
+    public List<ProductEntity> getAll_P() {
+        String sql = "SELECT * FROM product"; // Consulta SQL para obtener todos los productos
+        try (org.sql2o.Connection con = sql2o.open()) { // Abrir conexión usando Sql2o
+            return con.createQuery(sql) // Crear y ejecutar la consulta
+                    .executeAndFetch(ProductEntity.class); // Mapear resultados a la clase ProductEntity
+        } catch (Exception e) {
+            e.printStackTrace(); // Manejar cualquier excepción
+            return new ArrayList<>(); // Retornar una lista vacía en caso de error
+        }
+    }
+
 }

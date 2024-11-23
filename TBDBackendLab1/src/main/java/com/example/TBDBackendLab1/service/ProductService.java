@@ -24,4 +24,7 @@ public class ProductService {
     public List<ProductEntity> getByCategoryId(Integer category_id){
         return productRepository.getByCategory(category_id);
     }
+    public List<ProductEntity> getAll(){
+        return productRepository.getAll_P();
+    }
 }

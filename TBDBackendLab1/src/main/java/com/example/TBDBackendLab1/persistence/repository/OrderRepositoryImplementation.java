@@ -53,4 +53,32 @@ public class OrderRepositoryImplementation implements OrderRepository {
                     .executeAndFetch(OrderEntity.class);
         }
     }
+    @Override
+    public boolean deleteOrder(Integer order_id){
+        String sql = "DELETE FROM order_info WHERE order_id = :order_id";
+        try (org.sql2o.Connection con = sql2o.open()) {
+            con.createQuery(sql)
+                    .addParameter("order_id",order_id)
+                    .executeUpdate();
+
+        }
+        return true;
+    }
+    @Override
+    public boolean updateOrderEstate(Integer order_id, String estate) {
+        String sql = "UPDATE order_info " +
+                "SET estate = :estate " +
+                "WHERE order_id = :order_id";
+        try (org.sql2o.Connection con = sql2o.open()) {
+            con.createQuery(sql)
+                    .addParameter("estate", estate)
+                    .addParameter("order_id", order_id)
+                    .executeUpdate();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

@@ -271,3 +271,31 @@ CREATE TRIGGER trigger_add_problematic_order AFTER
 INSERT
     ON order_detail FOR EACH ROW
 EXECUTE FUNCTION update_problematic_order_on_stock_issue ();
+
+CREATE OR REPLACE FUNCTION update_stock_and_order_total()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Reducir el stock del producto
+    UPDATE product
+    SET stock = stock - NEW.amount
+    WHERE product_id = NEW.product_id;
+
+    -- Verificar que el stock no sea negativo
+    IF (SELECT stock FROM product WHERE product_id = NEW.product_id) < 0 THEN
+        RAISE EXCEPTION 'No hay suficiente stock para el producto con ID %', NEW.product_id;
+    END IF;
+
+    -- Actualizar el total de la orden
+    UPDATE order_info
+    SET total = total + (NEW.amount * NEW.unit_price)
+    WHERE order_id = NEW.order_id;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Crear el trigger que llama a la función después de insertar en order_detail
+CREATE TRIGGER update_stock_and_total_trigger AFTER
+INSERT
+    ON order_detail FOR EACH ROW
+EXECUTE FUNCTION update_stock_and_order_total ();

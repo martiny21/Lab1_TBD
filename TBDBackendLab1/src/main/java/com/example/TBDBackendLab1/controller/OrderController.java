@@ -40,5 +40,11 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
+    @PostMapping("/update")
+    public boolean updateOrder(@PathVariable Integer id, @PathVariable String status){
+        return orderService.updateOrder(status, id);
+
+    }
+
 
 }

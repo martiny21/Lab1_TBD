@@ -2,41 +2,31 @@
   <div class="container main">
     <header>
       <section class="header-section">
-        <img class="main-logo" @click="handleClick" />
         <div class="button-container1">
           <router-link to="/create">
-            <div type="button" class="btn btn-secondary">
+            <div class="btn btn-secondary">
               <i class="fi fi-rr-user"></i> Crear Producto
             </div>
           </router-link>
           <div v-if="isLogged">
-            <div
-              type="button"
-              class="btn btn-secondary"
-              @click="toggleIsLogged"
-            >
+            <div class="btn btn-secondary" @click="toggleIsLogged">
               <i class="fi fi-rr-user"></i> Cerrar sesión
             </div>
           </div>
           <div v-else>
             <router-link to="/login">
-              <div type="button" class="btn btn-secondary">
+              <div class="btn btn-secondary">
                 <i class="fi fi-rr-user"></i> Ingreso
               </div>
             </router-link>
           </div>
         </div>
-        <!-- Botones de Ver Orden e Historial -->
         <div class="order-buttons">
           <router-link to="/order">
-            <button type="button" class="btn btn-info">
-              Ver Orden
-            </button>
+            <button type="button" class="btn btn-info">Ver mis Ordenes</button>
           </router-link>
           <router-link to="/history">
-            <button type="button" class="btn btn-warning">
-              Historial
-            </button>
+            <button type="button" class="btn btn-warning">Historial</button>
           </router-link>
         </div>
       </section>
@@ -54,7 +44,8 @@
           :key="product.productid"
         >
           <h2>{{ product.name }}</h2>
-          <p><strong>Descripción:</strong> {{ product.description }}</p>
+          <p><strong>Nombre:</strong> {{ product.product_name }}</p>
+          <p><strong>Descripción:</strong> {{ product.product_desc }}</p>
           <p><strong>Precio:</strong> ${{ product.price }}</p>
           <p><strong>Stock:</strong> {{ product.stock }}</p>
           <p>
@@ -68,87 +59,139 @@
           <button
             class="btn btn-success"
             :disabled="product.stock === 0"
-            @click="addToOrder(product)"
+            @click="openOrderSelection(product)"
           >
             Agregar a la Orden
           </button>
         </div>
       </div>
     </section>
+
+    <!-- Modal para seleccionar una orden -->
+    <div v-if="showOrderModal" class="modal">
+      <div class="modal-content">
+        <h2>Seleccionar Orden</h2>
+        <div v-if="orders.length === 0">
+          No tienes órdenes disponibles.
+        </div>
+        <div v-else>
+          <ul>
+            <li
+              v-for="order in orders"
+              :key="order.order_id"
+              class="order-item"
+            >
+              <span>Orden ID: {{ order.order_id }}</span>
+              <button @click="addProductToOrder(order, selectedProduct)">
+                Seleccionar
+              </button>
+            </li>
+          </ul>
+        </div>
+        <button @click="closeOrderModal">Cerrar</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
       isLogged: localStorage.getItem("isLogged") === "true",
       userLogged: localStorage.getItem("isLogged") === "true"
-        ? JSON.parse(sessionStorage.getItem("userLogged"))
+        ? JSON.parse(localStorage.getItem("userLogged"))
         : null,
-      products: [
-        {
-          productid: 1,
-          name: "Laptop Lenovo",
-          description: "Laptop de 15.6 pulgadas con procesador i7",
-          price: 1200,
-          stock: 10,
-        },
-        {
-          productid: 2,
-          name: "Auriculares Sony WH-1000XM4",
-          description: "Auriculares inalámbricos con cancelación de ruido",
-          price: 300,
-          stock: 5,
-        },
-        {
-          productid: 3,
-          name: "Smartphone Samsung Galaxy S23",
-          description: "Smartphone de última generación con cámara avanzada",
-          price: 900,
-          stock: 0,
-        },
-        {
-          productid: 4,
-          name: "Teclado Mecánico Logitech",
-          description: "Teclado mecánico con iluminación RGB",
-          price: 150,
-          stock: 15,
-        },
-        {
-          productid: 5,
-          name: "Monitor Dell Ultrasharp",
-          description: "Monitor de 27 pulgadas 4K con panel IPS",
-          price: 500,
-          stock: 8,
-        },
-      ],
+      products: [],
+      orders: [],
+      showOrderModal: false,
+      selectedProduct: null,
     };
   },
   methods: {
-    addToOrder(product) {
-      if (!this.isLogged) {
-        alert("Debe iniciar sesión para agregar productos a la orden.");
-        return;
-      }
-      alert(`Producto "${product.name}" agregado a la orden.`);
+    fetchProducts() {
+      axios
+        .get("http://localhost:8080/product/getall", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
+        })
+        .then((response) => {
+          this.products = response.data;
+        })
+        .catch((error) => {
+          console.error("Error al obtener los productos:", error);
+          alert("Hubo un problema al obtener los productos.");
+        });
+    },
+    fetchOrders() {
+      const clientId = this.userLogged.client_id;
+      axios
+        .get(`http://localhost:8080/order/getByClientId/${clientId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
+        })
+        .then((response) => {
+          this.orders = response.data;
+        })
+        .catch((error) => {
+          console.error("Error al obtener las órdenes:", error);
+          alert("Hubo un problema al obtener las órdenes.");
+        });
+    },
+    openOrderSelection(product) {
+      this.selectedProduct = product;
+      this.fetchOrders();
+      this.showOrderModal = true;
+    },
+    addProductToOrder(order, product) {
+      const detail = {
+        order_id: order.order_id,
+        product_id: product.product_id,
+        amount: 1, // Por simplicidad, ajusta según sea necesario
+        unit_price: product.price,
+      };
+
+      axios
+        .post("http://localhost:8080/detail/", detail, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
+        })
+        .then(() => {
+          alert(`Producto "${product.name}" agregado a la orden ID ${order.order_id}`);
+          this.closeOrderModal();
+          //recargar productos
+          this.fetchProducts();
+        })
+        .catch((error) => {
+          console.error("Error al agregar producto a la orden:", error);
+          alert("No se pudo agregar el producto a la orden.");
+        });
+    },
+    closeOrderModal() {
+      this.showOrderModal = false;
+      this.selectedProduct = null;
     },
     toggleIsLogged() {
-      // Eliminar token, datos del usuario y cambiar el estado de sesión
-      localStorage.removeItem("jwt"); // Eliminar el token
-      sessionStorage.removeItem("userLogged"); // Eliminar datos del usuario
-      localStorage.setItem("isLogged", "false"); // Actualizar el estado de sesión
-      this.isLogged = false; // Cambiar el estado en el componente
-      this.userLogged = null; // Asegurarse de limpiar los datos del usuario
+      localStorage.removeItem("jwt");
+      sessionStorage.removeItem("userLogged");
+      localStorage.setItem("isLogged", "false");
+      this.isLogged = false;
+      this.userLogged = null;
       alert("Has cerrado sesión correctamente.");
-      this.$router.push("/login"); // Redirigir al login
+      this.$router.push("/login");
     },
-    handleClick() {
-      alert("Logo clickeado");
-    },
+  },
+  created() {
+    this.fetchProducts();
   },
 };
 </script>
+
 <style scoped>
 .container {
   padding: 20px;
@@ -312,5 +355,38 @@ button:hover {
 
 .btn-warning:hover {
   background-color: #d39e00;
+}
+
+/* Modal estilos */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  color: black;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 </style>

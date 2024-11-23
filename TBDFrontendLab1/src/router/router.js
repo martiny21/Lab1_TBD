@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import home from '../views/home.vue'
 import register from '../views/register.vue'
-import login from '../views/login.vue'
+import login from '../views/Login.vue'
 import productList from '../views/productList.vue'
 import clients from '../views/clients.vue'
 import logged from '../views/logged.vue'
 import order from '../views/order.vue'
+import OrderDetail from "../views/orderdetail.vue"
 
 const routes = [
   {
@@ -44,6 +45,11 @@ const routes = [
     name: 'order',
     component: order
 
+  },
+  {
+    path: "/orderdetail/:id",
+    name: "OrderDetail",
+    component: OrderDetail,
   }
 ]
 const router = createRouter({

@@ -24,4 +24,8 @@ public class OrderService {
     public List<OrderEntity> getByClientId(Integer client_id){
         return orderRepository.getByClientId(client_id);
     }
-}
+
+    public boolean updateOrder(String status, Integer order_id){return orderRepository.updateOrderEstate(order_id,status);}
+
+    }
+

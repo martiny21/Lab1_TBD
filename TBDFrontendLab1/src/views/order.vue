@@ -1,186 +1,221 @@
 <template>
-    <div class="order-container">
-      <h1>Resumen de Orden</h1>
-      <div v-if="orderItems.length === 0" class="no-order">
-        No hay productos en la orden.
+  <div class="container">
+    <header class="header">
+      <button class="btn btn-home" @click="goToHome">Home</button>
+      <h1>Órdenes del Cliente</h1>
+    </header>
+    <section>
+      <button class="btn btn-primary" @click="fetchOrders">
+        Buscar Órdenes
+      </button>
+
+      <button class="btn btn-secondary" @click="createOrder">
+        Crear Nueva Orden
+      </button>
+
+      <div v-if="orders.length === 0" class="no-orders">
+        No hay órdenes disponibles para el cliente.
       </div>
-      <div v-else>
-        <table class="order-table">
-          <thead>
-            <tr>
-              <th>Producto</th>
-              <th>Descripción</th>
-              <th>Precio Unitario</th>
-              <th>Cantidad</th>
-              <th>Subtotal</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in orderItems" :key="item.productid">
-              <td>{{ item.name }}</td>
-              <td>{{ item.description }}</td>
-              <td>${{ item.price }}</td>
-              <td>{{ item.quantity }}</td>
-              <td>${{ item.price * item.quantity }}</td>
-              <td>
-                <button class="btn btn-danger" @click="removeItem(item.productid)">
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="order-summary">
-          <h2>Total a Pagar: ${{ total }}</h2>
-          <button class="btn btn-success" @click="proceedToPayment">
-            Pagar
+      <div v-else class="orders-container">
+        <div
+          class="order-card"
+          v-for="order in orders"
+          :key="order.order_id"
+        >
+          <h2>Orden ID: {{ order.order_id }}</h2>
+          <p><strong>Fecha:</strong> {{ order.order_date }}</p>
+          <p><strong>Estado:</strong> {{ order.estate }}</p>
+          <p><strong>Total:</strong> ${{ order.total }}</p>
+          <!-- Botón para ver más detalles -->
+          <button
+            class="btn btn-detail"
+            @click="viewOrderDetail(order.order_id)"
+          >
+            Ver más detalles
           </button>
         </div>
       </div>
-    </div>
-  </template>
+    </section>
+  </div>
+</template>
 
-  <script>
-  export default {
-    data() {
-      return {
-        // Lista de productos agregados a la orden (simulada para fines de demostración)
-        orderItems: [
-          {
-            productid: 1,
-            name: "Laptop Lenovo",
-            description: "Laptop de 15.6 pulgadas con procesador i7",
-            price: 1200,
-            quantity: 1,
+
+<script>
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      orders: [],
+      userLogged: JSON.parse(localStorage.getItem("userLogged")),
+      token: localStorage.getItem("jwt"),
+    };
+  },
+  methods: {
+    goToHome() {
+      this.$router.push("/logged");
+    },
+    fetchOrders() {
+      const clientId = this.userLogged.client_id;
+
+      axios
+        .get(`http://localhost:8080/order/getByClientId/${clientId}`, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
           },
-          {
-            productid: 2,
-            name: "Auriculares Sony WH-1000XM4",
-            description: "Auriculares inalámbricos con cancelación de ruido",
-            price: 300,
-            quantity: 2,
-          },
-        ],
+        })
+        .then((response) => {
+          this.orders = response.data;
+        })
+        .catch((error) => {
+          console.error("Error al obtener las órdenes:", error);
+          if (error.response && error.response.status === 404) {
+            alert("No se encontraron órdenes para este cliente.");
+          } else {
+            alert("Hubo un problema al cargar las órdenes.");
+          }
+        });
+    },
+    createOrder() {
+      const clientId = this.userLogged.client_id;
+
+      const newOrder = {
+        order_date: new Date().toISOString(),
+        estate: "pendiente",
+        client_id: clientId,
+        total: 0.0,
       };
+
+      axios
+        .post("http://localhost:8080/order/", newOrder, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
+        })
+        .then((response) => {
+          this.orders.push(response.data);
+          alert("Orden creada exitosamente.");
+        })
+        .catch((error) => {
+          console.error("Error al crear la orden:", error);
+          alert("No se pudo crear la orden.");
+        });
     },
-    computed: {
-      // Calcula el total a pagar
-      total() {
-        return this.orderItems.reduce(
-          (acc, item) => acc + item.price * item.quantity,
-          0
-        );
-      },
+    viewOrderDetail(orderId) {
+      // Redirige a la ruta con el ID de la orden
+      this.$router.push(`/orderdetail/${orderId}`);
     },
-    methods: {
-      // Eliminar un producto de la orden
-      removeItem(productid) {
-        this.orderItems = this.orderItems.filter(
-          (item) => item.productid !== productid
-        );
-      },
-      // Proceder al pago
-      proceedToPayment() {
-        if (this.orderItems.length === 0) {
-          alert("No hay productos en la orden para pagar.");
-          return;
-        }
-        alert("¡Gracias por tu compra! Total a pagar: $" + this.total);
-        // Aquí podrías redirigir al usuario a una página de confirmación o iniciar el flujo de pago.
-      },
-    },
-  };
-  </script>
+  },
+  created() {
+    this.fetchOrders();
+  },
+};
+</script>
 
-  <style scoped>
-  .order-container {
-    padding: 20px;
-    max-width: 900px;
-    margin: 0 auto;
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
 
-  h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 2em;
-    color: #3a777b;
-  }
+<style scoped>
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
 
-  .no-order {
-    text-align: center;
-    font-size: 18px;
-    color: gray;
-  }
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
 
-  .order-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-  }
+.header h1 {
+  font-size: 2rem;
+  color: #ffffff;
+  margin: 0;
+}
 
-  .order-table th,
-  .order-table td {
-    border: 1px solid #dee2e6;
-    padding: 15px;
-    text-align: left;
-    font-size: 14px;
-  }
+.btn-home {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
 
-  .order-table th {
-    background-color: #3a777b;
-    color: #fff;
-    font-weight: bold;
-    text-align: center;
-  }
+.btn-home:hover {
+  background-color: #218838;
+}
 
-  .order-table td {
-    color: #333;
-  }
+.orders-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
 
-  .order-summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-  }
+.order-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-  .order-summary h2 {
-    color: #3a777b;
-    font-size: 1.5em;
-  }
+.order-card h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
 
-  .btn {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
+.order-card p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #555;
+}
 
-  .btn-danger {
-    background-color: #dc3545;
-    color: #fff;
-  }
+.no-orders {
+  text-align: center;
+  color: gray;
+  font-size: 16px;
+}
 
-  .btn-danger:hover {
-    background-color: #a71d2a;
-  }
+button {
+  display: inline-block;
+  margin: 10px 0;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
 
-  .btn-success {
-    background-color: #28a745;
-    color: #fff;
-  }
+button.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
 
-  .btn-success:hover {
-    background-color: #218838;
-  }
-  </style>
+button.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+button.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+button.btn-secondary:hover {
+  background-color: #5a6268;
+}
+button.btn-detail {
+  background-color: #17a2b8;
+  color: white;
+  margin-top: 10px;
+}
+
+button.btn-detail:hover {
+  background-color: #117a8b;
+}
+
+</style>
