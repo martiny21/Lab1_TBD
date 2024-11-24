@@ -17,7 +17,8 @@ public class ProductRepositoryImplementation implements ProductRepository {
 
     @Override
     public ProductEntity addProduct(ProductEntity product) {
-        String sql = "INSERT INTO product (product_name, product_desc, price, stock, estate, category_id)" +
+        String sql = "SET app.client_id = :0;" +
+                "INSERT INTO product (product_name, product_desc, price, stock, estate, category_id)" +
                 "VALUES (:product_name, :product_desc, :price, :stock, :estate, :category_id)";
 
         try (org.sql2o.Connection con = sql2o.open()) {

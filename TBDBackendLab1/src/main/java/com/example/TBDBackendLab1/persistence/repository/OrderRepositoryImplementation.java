@@ -15,7 +15,8 @@ public class OrderRepositoryImplementation implements OrderRepository {
 
     @Override
     public OrderEntity addOrder(OrderEntity order) {
-        String sql = "INSERT INTO order_info (order_date, estate, client_id, total)" +
+        String sql = "SET app.client_id = :client_id;" +
+                "INSERT INTO order_info (order_date, estate, client_id, total)" +
                 "VALUES ( :order_date, :estate, :client_id, :total)";
 
         try (org.sql2o.Connection con = sql2o.open()) {

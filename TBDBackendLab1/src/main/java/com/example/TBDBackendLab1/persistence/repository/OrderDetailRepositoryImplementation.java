@@ -16,7 +16,8 @@ public class OrderDetailRepositoryImplementation implements OrderDetailRepositor
 
     @Override
     public OrderDetailEntity addOrderDetail(OrderDetailEntity detail) {
-        String sql = "INSERT INTO order_detail (order_id, product_id, amount, unit_price)" +
+        String sql = "SET app.client_id = (SELECT client_id FROM orders WHERE order_id = :order_id); " +
+                "INSERT INTO order_detail (order_id, product_id, amount, unit_price)" +
                 "VALUES (:order_id, :product_id, :amount, :unit_price)";
 
         try (org.sql2o.Connection con = sql2o.open()) {

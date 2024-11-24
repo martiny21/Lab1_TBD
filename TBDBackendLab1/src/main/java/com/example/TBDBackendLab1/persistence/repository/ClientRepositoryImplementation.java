@@ -16,7 +16,8 @@ public class ClientRepositoryImplementation implements ClientRepository{
     private Sql2o sql2o;
     @Override
     public ClientEntity addClient(ClientEntity client) {
-        String sql = "INSERT INTO client (client_name, direction, email, client_number, client_password, is_admin)" +
+        String sql = "SET app.client_id = :0;" +
+                "INSERT INTO client (client_name, direction, email, client_number, client_password, is_admin)" +
                 "VALUES (:client_name, :direction, :email, :client_number, :client_password, :is_admin)";
 
         try (org.sql2o.Connection con = sql2o.open()) {
