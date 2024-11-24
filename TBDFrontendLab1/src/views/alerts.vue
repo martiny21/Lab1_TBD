@@ -1,24 +1,25 @@
 <template>
-    <div class="report-container">
-      <h1>Reporte de Consultas de Clientes</h1>
-      <div v-if="loading" class="loading">Cargando reporte...</div>
+    <div class="alert-container">
+      <h1>Alertas de compras</h1>
+      <div v-if="loading" class="loading">Cargando alertas...</div>
       <div v-else-if="error" class="error">{{ error }}</div>
-      <div v-else-if="reportData.length === 0" class="no-data">
+      <div v-else-if="alertData.length === 0" class="no-data">
         No hay datos disponibles.
       </div>
       <div v-else>
-        <table class="report-table">
+        <table class="alert-table">
           <thead>
             <tr>
               <th>Cliente ID</th>
-              <th>Total Operaciones</th>
+              <th>Fecha</th>
+              <th>Descripcion</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="report in reportData" :key="report.client_id">
-              <td v-if="report.client_id!=null">{{ report.client_id }}</td>
-              <td v-else>{{ "Sistema" }}</td>
-              <td>{{ report.query_count }}</td>
+            <tr v-for="alert in alertData" :key="alert.client_id">
+              <td>{{ alert.client_id }}</td>
+              <td>{{ alert.alert_date }}</td>
+              <td>{{ alert.alert_desc }}</td>
             </tr>
           </tbody>
         </table>
@@ -30,42 +31,42 @@
   import axios from "axios";
 
   export default {
-    name: "ClientQueryReport",
+    name: "ClientShopAlerts",
     data() {
       return {
         loading: true,
         error: null,
-        reportData: [],
+        alertData: [],
       };
     },
     methods: {
-      fetchClientQueryReport() {
+      fetchClientShopAlerts() {
         axios
-          .get("http://localhost:8080/client/getReports", {
+          .get("http://localhost:8080/client/getAlerts", {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("jwt")}`,
             },
           })
           .then((response) => {
-            this.reportData = response.data;
+            this.alertData = response.data;
             this.loading = false;
-            console.log("Reporte de consultas de clientes:", this.reportData);
+            console.log("Alertas de compras:", this.alertData);
           })
           .catch((err) => {
-            console.error("Error al obtener el reporte:", err);
-            this.error = "Hubo un problema al cargar el reporte.";
+            console.error("Error al obtener las alertas:", err);
+            this.error = "Hubo un problema al cargar las alertas.";
             this.loading = false;
           });
       },
     },
     created() {
-      this.fetchClientQueryReport();
+      this.fetchClientShopAlerts();
     },
   };
   </script>
 
   <style scoped>
-  .report-container {
+  .alert-container {
     padding: 20px;
     max-width: 800px;
     margin: 0 auto;
@@ -95,26 +96,26 @@
     color: red; /* Error debe mantenerse rojo */
   }
 
-  .report-table {
+  .alert-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
   }
 
-  .report-table th,
-  .report-table td {
+  .alert-table th,
+  .alert-table td {
     padding: 10px;
     text-align: left;
     border: 1px solid #ddd;
     color: #000; /* Texto negro para encabezados y celdas */
   }
 
-  .report-table th {
+  .alert-table th {
     background-color: #f4f4f4;
     color: #000; /* Texto negro en encabezados */
   }
 
-  .report-table tbody tr:hover {
+  .alert-table tbody tr:hover {
     background: #f9f9f9;
     color: #000; /* Texto negro al pasar el ratón */
   }

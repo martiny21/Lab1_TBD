@@ -1,5 +1,6 @@
 package com.example.TBDBackendLab1.persistence.repository;
 
+import com.example.TBDBackendLab1.persistence.entity.ClientAlert;
 import com.example.TBDBackendLab1.persistence.entity.ClientEntity;
 import com.example.TBDBackendLab1.persistence.entity.ClientQueryReport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,4 +66,15 @@ public class ClientRepositoryImplementation implements ClientRepository{
                     .executeAndFetch(ClientQueryReport.class);
         }
     }
+
+    public List<ClientAlert> getClientAlerts() {
+        String sql = "SELECT * FROM shop_alerts";
+
+        try (Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .executeAndFetch(ClientAlert.class);
+        }
+    }
+
+
 }

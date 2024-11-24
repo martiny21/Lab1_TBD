@@ -10,6 +10,7 @@ import OrderDetail from "../views/orderdetail.vue"
 import history from "../views/history.vue"
 import admin from "../views/admin.vue"
 import almacenado from "../views/alma.vue"
+import alerts from "../views/alerts.vue"
 
 const routes = [
   {
@@ -68,6 +69,11 @@ const routes = [
     path: "/almacenado",
     name: "almacenado",
     component: almacenado,
+  },
+  {
+    path: "/alerts",
+    name: "alerts",
+    component: alerts,
   }
 ]
 

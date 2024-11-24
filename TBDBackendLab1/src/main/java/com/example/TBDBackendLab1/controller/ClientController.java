@@ -1,5 +1,6 @@
 package com.example.TBDBackendLab1.controller;
 
+import com.example.TBDBackendLab1.persistence.entity.ClientAlert;
 import com.example.TBDBackendLab1.persistence.entity.ClientEntity;
 import com.example.TBDBackendLab1.persistence.entity.ClientQueryReport;
 import com.example.TBDBackendLab1.service.ClientService;
@@ -88,5 +89,10 @@ public class ClientController {
     @GetMapping("/getReports")
     public List<ClientQueryReport> getReports(){
         return clientService.getReports();
+    }
+
+    @GetMapping("/getAlerts")
+    public List<ClientAlert> getClientAlerts(){
+        return clientService.getClientAlerts();
     }
 }

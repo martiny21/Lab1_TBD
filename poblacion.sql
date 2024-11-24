@@ -1,3 +1,8 @@
+-- Actualizar usuario administrador
+UPDATE client
+SET is_admin = true
+WHERE client_id = 1;
+
 -- Insertar categorías
 INSERT INTO
     category (category_name)

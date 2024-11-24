@@ -4,21 +4,26 @@
         Página principal
       </title>
       <h1>
-        Bienvenido a la página principal de E-commerce
+        Administración de la tienda
       </h1>
       <p>
-        Donde se gestionen productos, órdenes de compra, clientes y el inventario en tiempo real.
+        Gestion de personal, clientes y productos
       </p>
     </div>
     <div>
       <button>
         <router-link class="button-link" to="/almacenado">
-          Ver Almacenado
+          Operaciones por cliente
         </router-link>
       </button>
       <button>
-        <router-link class="button-link" to="/trigger-queries">
-          Ver Trigger de Queries
+        <router-link class="button-link" to="/alerts">
+          Alertas de compras
+        </router-link>
+      </button>
+      <button>
+        <router-link class="button-link" to="/create">
+          Crear producto o categoria
         </router-link>
       </button>
     </div>

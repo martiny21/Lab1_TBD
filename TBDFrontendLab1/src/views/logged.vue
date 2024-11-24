@@ -3,9 +3,9 @@
     <header>
       <section class="header-section">
         <div class="button-container1">
-          <router-link to="/create">
-            <div class="btn btn-secondary">
-              <i class="fi fi-rr-user"></i> Crear Producto
+          <router-link to="/admin">
+            <div v-if="userLogged._admin"class="btn btn-secondary">
+              <i class="fi fi-rr-user"></i> Vista de Administrador
             </div>
           </router-link>
           <div v-if="isLogged">
