@@ -11,7 +11,11 @@
             <input type="password" class="form-control" id="password" v-model= "password">
         </div>
         </form>
-        <button type="submit" class="btn btn-primary" @click="login">Login</button>
+        <button type="submit" class="btn btn-primary" @click="login">
+            <router-link to="/logged">
+            Login
+            </router-link>
+        </button>
         <a href="/" class="redirect-link">Volver</a>
     </div>
 </template>

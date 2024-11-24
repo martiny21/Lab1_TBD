@@ -1,38 +1,43 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from './components/Home.vue'
-import Register from './components/Register.vue'
-import Login from './components/Login.vue'
-import ProductList from './components/ProductList.vue'
-import Clients from './components/Clients.vue'
+import home from './components/home.vue'
+import register from './components/register.vue'
+import login from './components/login.vue'
+import productList from './components/productList.vue'
+import clients from './components/clients.vue'
+import logged from './components/logged.vue'
 
 const routes = [
     {
       path: '/',
-      name: 'Home',
-      component: Home
+      name: 'home',
+      component: home
     },
     {
       path: '/register',
-      name: 'Register',
-      component: Register
+      name: 'register',
+      component: register
     },
     {
       path: '/login',
-      name: 'Login',
-      component: Login
+      name: 'login',
+      component: login
     },
     {
       path: '/productList',
-      name: 'ProductList',
-      component: ProductList
+      name: 'productList',
+      component: productList
     },
     {
       path: '/clients',
-      name: 'Clients',
-      component: Clients
+      name: 'clients',
+      component: clients
+    },
+    {
+      path: '/logged',
+      name: 'logged',
+      component: logged
     }
 ]
-
 const router = createRouter({
     history: createWebHistory(),
     routes

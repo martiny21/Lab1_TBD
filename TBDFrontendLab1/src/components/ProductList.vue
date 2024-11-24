@@ -1,4 +1,5 @@
 <template>
+    <div class = "box">
     <title>
         Lista de productos
     </title>
@@ -34,87 +35,25 @@
                     </th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        Producto 1
-                    </td>
-                    <td>
-                        Descripción del producto 1
-                    </td>
-                    <td>
-                        $100
-                    </td>
-                    <td>
-                        10
-                    </td>
-                    <td>
-                        Categoría 1
-                    </td>
-                    <td>
-                        <button>
-                            Editar
-                        </button>
-                        <button>
-                            Eliminar
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Producto 2
-                    </td>
-                    <td>
-                        Descripción del producto 2
-                    </td>
-                    <td>
-                        $200
-                    </td>
-                    <td>
-                        0
-                    </td>
-                    <td>
-                        Categoría 2
-                    </td>
-                    <td>
-                        <button>
-                            Editar
-                        </button>
-                        <button>
-                            Eliminar
-                        </button>
-                        <span style="color: red;">
-                            Agotado
-                        </span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Producto 3
-                    </td>
-                    <td>
-                        Descripción del producto 3
-                    </td>
-                    <td>
-                        $300
-                    </td>
-                    <td>
-                        30
-                    </td>
-                    <td>
-                        Categoría 3
-                    </td>
-                    <td>
-                        <button>
-                            Editar
-                        </button>
-                        <button>
-                            Eliminar
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
         </table>
     </div>
-
+</div>
 </template>
+
+<style>
+    .box {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f0f0;
+    margin: 20px;
+    padding: 20px;
+    border: 5px solid #3a777b;
+    border-radius: 5px;
+    color: #3a777b;
+    }
+    
+</style>
