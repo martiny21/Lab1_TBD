@@ -12,8 +12,7 @@ public class CategoryRepositoryImplementation implements CategoryRepository{
     private Sql2o sql2o;
     @Override
     public CategoryEntity addCategory(CategoryEntity category) {
-        String sql = "SET app.client_id = :0;" +
-                "INSERT INTO category (category_name)" +
+        String sql = "INSERT INTO category (category_name)" +
                 "VALUES (:category_name)";
 
         try (org.sql2o.Connection con = sql2o.open()) {

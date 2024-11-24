@@ -25,7 +25,7 @@ public class OrderService {
         return orderRepository.getByClientId(client_id);
     }
 
-    public boolean updateOrder(String status, Integer order_id){return orderRepository.updateOrderEstate(order_id,status);}
+    public boolean updateOrder(String status, Integer order_id){return orderRepository.updateOrderState(order_id,status);}
 
     }
 

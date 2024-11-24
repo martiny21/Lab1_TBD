@@ -150,7 +150,7 @@ export default {
         })
         .then((response) => {
           // Filtrar las órdenes con estado "pendiente"
-          this.orders = response.data.filter(order => order.estate === "pendiente");
+          this.orders = response.data.filter(order => order.state === "pendiente");
         })
         .catch((error) => {
           console.error("Error al obtener las órdenes:", error);
@@ -163,7 +163,7 @@ export default {
       this.showOrderModal = true;
     },
     addProductToOrder(order, product) {
-      if (order.estate !== "pendiente") {
+      if (order.state !== "pendiente") {
         alert("Solo puedes agregar productos a órdenes en estado pendiente.");
         return;
       }

@@ -17,21 +17,28 @@ public class OrderDetailRepositoryImplementation implements OrderDetailRepositor
     @Override
     public OrderDetailEntity addOrderDetail(OrderDetailEntity detail) {
         try (org.sql2o.Connection con = sql2o.beginTransaction()) { // Inicia una transacción
-            // Consulta para obtener el client_id correspondiente al order_id
-            String getClientIdQuery = "SELECT client_id FROM order_info WHERE order_id = :order_id";
-            Integer clientId = con.createQuery(getClientIdQuery)
-                    .addParameter("order_id", detail.getOrder_id())
-                    .executeScalar(Integer.class);
+            try {
 
-            // Asegúrate de que se encontró un client_id antes de continuar
-            if (clientId == null) {
-                throw new RuntimeException("No se encontró un client_id para el order_id proporcionado.");
+
+                // Consulta para obtener el client_id correspondiente al order_id
+                String getClientIdQuery = "SELECT client_id FROM order_info WHERE order_id = :order_id";
+                Integer clientId = con.createQuery(getClientIdQuery)
+                        .addParameter("order_id", detail.getOrder_id())
+                        .executeScalar(Integer.class);
+
+                // Asegúrate de que se encontró un client_id antes de continuar
+                if (clientId == null) {
+                    throw new RuntimeException("No se encontró un client_id para el order_id proporcionado.");
+                }
+
+                // Establece la variable de sesión app.client_id
+                String setClientIdQuery = "SET app.client_id = " + clientId;
+                con.createQuery(setClientIdQuery).executeUpdate();
             }
-
-            // Establece la variable de sesión app.client_id
-            String setClientIdQuery = "SET app.client_id = " + clientId;
-            con.createQuery(setClientIdQuery).executeUpdate();
-
+            catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("Error al obtener el client_id", e);
+            }
             // Inserta el detalle de la orden
             String insertQuery = "INSERT INTO order_detail (order_id, product_id, amount, unit_price) " +
                     "VALUES (:order_id, :product_id, :amount, :unit_price)";

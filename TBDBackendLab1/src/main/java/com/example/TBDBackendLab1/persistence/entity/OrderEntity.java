@@ -16,7 +16,7 @@ public class OrderEntity {
 
     private Integer order_id;
     private Date order_date;
-    private String estate;
+    private String state;
     private Integer client_id;
     private BigDecimal total;
 }

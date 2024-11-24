@@ -21,12 +21,12 @@ public class OrderRepositoryImplementation implements OrderRepository {
             con.createQuery(setClientIdQuery).executeUpdate();
 
             // Ahora ejecuta la consulta de inserción
-            String sql = "INSERT INTO order_info (order_date, estate, client_id, total) " +
-                    "VALUES (:order_date, :estate, :client_id, :total)";
+            String sql = "INSERT INTO order_info (order_date, state, client_id, total) " +
+                    "VALUES (:order_date, :state, :client_id, :total)";
 
             Integer generatedId = (Integer) con.createQuery(sql, true)
                     .addParameter("order_date", order.getOrder_date())
-                    .addParameter("estate", order.getEstate())
+                    .addParameter("state", order.getState())
                     .addParameter("client_id", order.getClient_id())
                     .addParameter("total", order.getTotal())
                     .executeUpdate()
@@ -56,7 +56,7 @@ public class OrderRepositoryImplementation implements OrderRepository {
 
     @Override
     public List<OrderEntity> getByClientId(Integer clientId) {
-        String sql = "SELECT order_id, order_date, estate, client_id, total FROM order_info WHERE client_id = :client_id";
+        String sql = "SELECT order_id, order_date, state, client_id, total FROM order_info WHERE client_id = :client_id";
         try (org.sql2o.Connection con = sql2o.open()) {
             return con.createQuery(sql)
                     .addParameter("client_id", clientId)
@@ -75,7 +75,7 @@ public class OrderRepositoryImplementation implements OrderRepository {
         return true;
     }
     @Override
-    public boolean updateOrderEstate(Integer order_id, String estate) {
+    public boolean updateOrderState(Integer order_id, String state) {
         try (org.sql2o.Connection con = sql2o.beginTransaction()) { // Inicia una transacción
 
             // Obtén el client_id basado en el order_id
@@ -90,11 +90,11 @@ public class OrderRepositoryImplementation implements OrderRepository {
 
             // Ahora ejecuta la consulta de actualización
             String sql = "UPDATE order_info " +
-                    "SET estate = :estate " +
+                    "SET state = :state " +
                     "WHERE order_id = :order_id";
 
             con.createQuery(sql)
-                    .addParameter("estate", estate)
+                    .addParameter("state", state)
                     .addParameter("order_id", order_id)
                     .executeUpdate();
 

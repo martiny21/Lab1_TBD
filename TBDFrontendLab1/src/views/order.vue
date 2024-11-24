@@ -24,7 +24,7 @@
         >
           <h2>Orden ID: {{ order.order_id }}</h2>
           <p><strong>Fecha:</strong> {{ order.order_date }}</p>
-          <p><strong>Estado:</strong> {{ order.estate }}</p>
+          <p><strong>Estado:</strong> {{ order.state }}</p>
           <p><strong>Total:</strong> ${{ order.total }}</p>
           <!-- Botón para ver más detalles -->
           <button
@@ -66,7 +66,7 @@ export default {
     })
     .then((response) => {
       // Filtrar las órdenes pendientes antes de asignarlas
-      this.orders = response.data.filter(order => order.estate === "pendiente");
+      this.orders = response.data.filter(order => order.state === "pendiente");
     })
     .catch((error) => {
       console.error("Error al obtener las órdenes:", error);
@@ -80,7 +80,7 @@ export default {
 
 createOrder() {
   // Verificar si ya existe una orden con estado pendiente
-  const hasPendingOrder = this.orders.some(order => order.estate === "pendiente");
+  const hasPendingOrder = this.orders.some(order => order.state === "pendiente");
 
   if (hasPendingOrder) {
     alert("Ya existe una orden pendiente. No se puede crear una nueva hasta que se complete.");
@@ -91,7 +91,7 @@ createOrder() {
 
   const newOrder = {
     order_date: new Date().toISOString(),
-    estate: "pendiente",
+    state: "pendiente",
     client_id: clientId,
     total: 0.0,
   };

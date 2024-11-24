@@ -17,9 +17,9 @@ public class ProductRepositoryImplementation implements ProductRepository {
 
     @Override
     public ProductEntity addProduct(ProductEntity product) {
-        String sql = "SET app.client_id = :0;" +
-                "INSERT INTO product (product_name, product_desc, price, stock, estate, category_id)" +
-                "VALUES (:product_name, :product_desc, :price, :stock, :estate, :category_id)";
+        String sql =
+                "INSERT INTO product (product_name, product_desc, price, stock, state, category_id)" +
+                "VALUES (:product_name, :product_desc, :price, :stock, :state, :category_id)";
 
         try (org.sql2o.Connection con = sql2o.open()) {
             Integer generatedId = (Integer) con.createQuery(sql, true)
@@ -27,7 +27,7 @@ public class ProductRepositoryImplementation implements ProductRepository {
                     .addParameter("product_desc", product.getProduct_desc())
                     .addParameter("price", product.getPrice())
                     .addParameter("stock", product.getStock())
-                    .addParameter("estate", product.getEstate())
+                    .addParameter("state", product.getState())
                     .addParameter("category_id", product.getCategory_id())
                     .executeUpdate()
                     .getKey();

@@ -95,7 +95,7 @@ export default {
             },
           }
         );
-        this.orderState = orderResponse.data.estate;
+        this.orderState = orderResponse.data.state;
 
         this.calculateTotal();
       } catch (error) {

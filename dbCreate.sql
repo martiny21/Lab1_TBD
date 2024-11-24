@@ -11,8 +11,8 @@ CREATE TABLE product (
     product_desc TEXT,
     price DECIMAL(10, 2) NOT NULL CHECK (price >= 0),
     stock INT NOT NULL CHECK (stock >= 0),
-    estate VARCHAR(50) NOT NULL CHECK (
-        estate IN ('disponible', 'agotado')
+    state VARCHAR(50) NOT NULL CHECK (
+        state IN ('disponible', 'agotado')
     ),
     category_id INTEGER NOT NULL REFERENCES category (category_id)
 );
@@ -32,8 +32,8 @@ CREATE TABLE client (
 CREATE TABLE order_info (
     order_id SERIAL PRIMARY KEY,
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    estate VARCHAR(50) NOT NULL CHECK (
-        estate IN (
+    state VARCHAR(50) NOT NULL CHECK (
+        state IN (
             'pendiente',
             'pagada',
             'enviada',
@@ -208,7 +208,7 @@ DECLARE
     detail RECORD;
 BEGIN
     -- Verificar si el estado de la orden cambia a "devolución"
-    IF NEW.estate = 'devolucion' THEN
+    IF NEW.state = 'devolucion' THEN
         -- Recorrer los detalles de la orden en order_detail
         FOR detail IN
             SELECT product_id, amount
@@ -232,7 +232,7 @@ $$ LANGUAGE plpgsql;
 
 -- Trigger para manejar devoluciones
 CREATE TRIGGER update_stock_on_order_return AFTER
-UPDATE OF estate ON order_info FOR EACH ROW
+UPDATE OF state ON order_info FOR EACH ROW
 EXECUTE FUNCTION update_stock_on_return_via_order ();
 
 --query ¿Qué porcentaje de las órdenes de cada cliente ha tenido problemas de stock (algún producto en la orden no estaba disponible al momento de la compra)?
