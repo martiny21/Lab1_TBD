@@ -7,6 +7,9 @@ import clients from '../views/clients.vue'
 import logged from '../views/logged.vue'
 import order from '../views/order.vue'
 import OrderDetail from "../views/orderdetail.vue"
+import history from "../views/history.vue"
+import admin from "../views/admin.vue"
+import almacenado from "../views/alma.vue"
 
 const routes = [
   {
@@ -50,8 +53,24 @@ const routes = [
     path: "/orderdetail/:id",
     name: "OrderDetail",
     component: OrderDetail,
+  },
+  {
+    path: "/history",
+    name: "history",
+    component: history,
+  },
+  {
+    path: "/admin",
+    name: "admin",
+    component: admin,
+  },
+  {
+    path: "/almacenado",
+    name: "almacenado",
+    component: almacenado,
   }
 ]
+
 const router = createRouter({
   history: createWebHistory(),
   routes

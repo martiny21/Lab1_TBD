@@ -16,12 +16,27 @@ public class OrderDetailRepositoryImplementation implements OrderDetailRepositor
 
     @Override
     public OrderDetailEntity addOrderDetail(OrderDetailEntity detail) {
-        String sql = "SET app.client_id = (SELECT client_id FROM orders WHERE order_id = :order_id); " +
-                "INSERT INTO order_detail (order_id, product_id, amount, unit_price)" +
-                "VALUES (:order_id, :product_id, :amount, :unit_price)";
+        try (org.sql2o.Connection con = sql2o.beginTransaction()) { // Inicia una transacción
+            // Consulta para obtener el client_id correspondiente al order_id
+            String getClientIdQuery = "SELECT client_id FROM order_info WHERE order_id = :order_id";
+            Integer clientId = con.createQuery(getClientIdQuery)
+                    .addParameter("order_id", detail.getOrder_id())
+                    .executeScalar(Integer.class);
 
-        try (org.sql2o.Connection con = sql2o.open()) {
-            Integer generatedId = (Integer) con.createQuery(sql, true)
+            // Asegúrate de que se encontró un client_id antes de continuar
+            if (clientId == null) {
+                throw new RuntimeException("No se encontró un client_id para el order_id proporcionado.");
+            }
+
+            // Establece la variable de sesión app.client_id
+            String setClientIdQuery = "SET app.client_id = " + clientId;
+            con.createQuery(setClientIdQuery).executeUpdate();
+
+            // Inserta el detalle de la orden
+            String insertQuery = "INSERT INTO order_detail (order_id, product_id, amount, unit_price) " +
+                    "VALUES (:order_id, :product_id, :amount, :unit_price)";
+
+            Integer generatedId = (Integer) con.createQuery(insertQuery, true)
                     .addParameter("order_id", detail.getOrder_id())
                     .addParameter("product_id", detail.getProduct_id())
                     .addParameter("amount", detail.getAmount())
@@ -29,13 +44,18 @@ public class OrderDetailRepositoryImplementation implements OrderDetailRepositor
                     .executeUpdate()
                     .getKey();
 
+            // Establece el ID generado en la entidad OrderDetail
             detail.setDetail_id(generatedId);
+
+            con.commit(); // Confirma la transacción
             return detail;
         } catch (Exception e) {
             e.printStackTrace();
-            throw e; // Manejar la excepción si es necesario
+            throw new RuntimeException("Error al agregar el detalle de la orden", e);
         }
     }
+
+
 
     @Override
     public OrderDetailEntity getById(Integer detail_id) {
@@ -63,5 +83,7 @@ public class OrderDetailRepositoryImplementation implements OrderDetailRepositor
                     .executeAndFetch(OrderDetailEntity.class);
         }
     }
+
+    //public boolean returnsorder(Integer order_id) {}
 
 }

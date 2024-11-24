@@ -28,17 +28,6 @@ CREATE TABLE client (
     is_admin BOOLEAN DEFAULT FALSE
 );
 
-CREATE TABLE audit_log (
-    id SERIAL PRIMARY KEY, -- Identificador único para cada registro
-    table_name VARCHAR(255) NOT NULL, -- Nombre de la tabla afectada
-    operation_type VARCHAR(50) NOT NULL, -- Tipo de operación: INSERT, UPDATE, DELETE
-    changed_data JSONB, -- Datos cambiados en formato JSON (opcional)
-    user_email VARCHAR(255), -- Usuario que realizó la operación (puedes enlazarlo con la tabla de usuarios)
-    operation_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha y hora de la operación
-    client_id INT, -- ID del cliente afectado (si aplica)
-    ip_address VARCHAR(45) -- Dirección IP desde donde se realizó la operación (IPv4 o IPv6)
-);
-
 -- Crear tabla orden
 CREATE TABLE order_info (
     order_id SERIAL PRIMARY KEY,
@@ -47,11 +36,23 @@ CREATE TABLE order_info (
         estate IN (
             'pendiente',
             'pagada',
-            'enviada'
+            'enviada',
+            'devolucion'
+
+
         )
     ),
     client_id INTEGER NOT NULL REFERENCES client (client_id),
     total DECIMAL(10, 2) NOT NULL CHECK (total >= 0)
+);
+--Crear tabla de devoluciones
+CREATE TABLE returns (
+    return_id SERIAL PRIMARY KEY,
+    order_id INTEGER NOT NULL REFERENCES order_info (order_id) ON DELETE CASCADE,
+    product_id INTEGER NOT NULL REFERENCES product (product_id),
+    return_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    amount INT NOT NULL CHECK (amount > 0),
+    reason TEXT
 );
 
 -- Crear tabla detalle_orden
@@ -64,16 +65,16 @@ CREATE TABLE order_detail (
 );
 
 -- Crear tabla bitacora de inserción
-CREATE TABLE insertion_log (
-    insertion_id SERIAL PRIMARY KEY,
-    table_name_affected TEXT NOT NULL,
-    operation_type TEXT NOT NULL,
-    client_id INTEGER NOT NULL REFERENCES client (client_id),
-    client_name VARCHAR(255),
-    email TEXT,
-    query_time TIMESTAMP DEFAULT NOW(),
-    old_data JSONB,
-    new_data JSONB
+-- Crear tabla para registrar auditorías de inserciones y cambios
+CREATE TABLE audit_log (
+    insertion_id SERIAL PRIMARY KEY, -- Identificador único para cada entrada de auditoría
+    table_name_affected TEXT NOT NULL, -- Nombre de la tabla afectada
+    operation_type TEXT NOT NULL CHECK ( -- Tipo de operación realizada: INSERT, UPDATE, DELETE
+        operation_type IN ('INSERT', 'UPDATE', 'DELETE')
+    ),
+    client_id INTEGER REFERENCES client (client_id) ON DELETE SET NULL, -- ID del cliente relacionado, permite NULL si no aplica
+    query_time TIMESTAMP DEFAULT NOW(), -- Fecha y hora en que se realizó la operación
+    new_data JSONB -- Datos nuevos en caso de INSERT o UPDATE
 );
 
 CREATE TABLE shop_alerts (
@@ -89,47 +90,30 @@ CREATE TABLE problematic_order (
     stock_issues_count INT NOT NULL DEFAULT 0 CHECK (stock_issues_count >= 0)
 );
 
---creamos la tabla de devoluciones
-CREATE TABLE returns (
-    return_id SERIAL PRIMARY KEY,
-    order_id INTEGER NOT NULL REFERENCES order_info (order_id) ON DELETE CASCADE,
-    product_id INTEGER NOT NULL REFERENCES product (product_id),
-    return_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    amount INT NOT NULL CHECK (amount > 0),
-    reason TEXT
-);
-
 CREATE OR REPLACE FUNCTION insertion_trigger_function()
 RETURNS TRIGGER AS $$
 DECLARE
     v_client_id INT;
-    v_client_name TEXT;
-    v_email TEXT;
+
 BEGIN
 
     -- Estos datos deben ser enviados por la aplicación al realizar una consulta.
     v_client_id := current_setting('app.client_id', true)::INT;
-    v_client_name := current_setting('app.client_name', true);
-    v_email := current_setting('app.email', true);
+
 
     INSERT INTO audit_log(
-        table_name,
+        table_name_affected,
         operation_type,
         client_id,
-        client_name,
-        email,
         query_time,
-        old_data,
         new_data
     )
     VALUES (
         TG_TABLE_NAME, -- Nombre de la tabla afectada
         TG_OP,         -- Tipo de operación (INSERT, UPDATE, DELETE)
         v_client_id,
-        v_client_name,
-        v_email,
         NOW(),
-        CASE WHEN TG_OP = 'DELETE' THEN row_to_json(OLD) ELSE NULL END, -- Datos antiguos
+
         CASE WHEN TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN row_to_json(NEW) ELSE NULL END -- Datos nuevos
     );
 
@@ -138,13 +122,13 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION get_client_query_report()
-RETURNS TABLE(client_id INTEGER, query_count INTEGER) AS $$
+RETURNS TABLE(client_id INTEGER, query_count BIGINT) AS $$
 BEGIN
     RETURN QUERY
-    SELECT client_id, COUNT(*) AS query_count
-    FROM insertion_log
-    WHERE operation_type IN ('INSERT', 'UPDATE', 'DELETE')
-    GROUP BY client_id
+    SELECT audit_log.client_id, COUNT(*) AS query_count
+    FROM audit_log
+    WHERE audit_log.operation_type IN ('INSERT', 'UPDATE', 'DELETE')
+    GROUP BY audit_log.client_id
     ORDER BY query_count DESC;
 END;
 $$ LANGUAGE plpgsql;
@@ -216,23 +200,40 @@ INSERT
 EXECUTE FUNCTION verify_reciently_shop ();
 
 --trigger para actualizar stock
-CREATE OR REPLACE FUNCTION update_stock_on_return()
+
+-- Función para manejar devoluciones y actualizar el stock
+CREATE OR REPLACE FUNCTION update_stock_on_return_via_order()
 RETURNS TRIGGER AS $$
+DECLARE
+    detail RECORD;
 BEGIN
-    -- Actualizar el stock del producto basado en la devolución registrada
-    UPDATE product
-    SET stock = stock + NEW.amount
-    WHERE product_id = NEW.product_id;
+    -- Verificar si el estado de la orden cambia a "devolución"
+    IF NEW.estate = 'devolucion' THEN
+        -- Recorrer los detalles de la orden en order_detail
+        FOR detail IN
+            SELECT product_id, amount
+            FROM order_detail
+            WHERE order_id = NEW.order_id
+        LOOP
+            -- Actualizar el stock del producto
+            UPDATE product
+            SET stock = stock + detail.amount
+            WHERE product_id = detail.product_id;
+
+            -- Registrar la devolución en la tabla returns
+            INSERT INTO returns (order_id, product_id, amount, reason)
+            VALUES (NEW.order_id, detail.product_id, detail.amount, 'Devolución de orden');
+        END LOOP;
+    END IF;
 
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
---crear el trigger
-CREATE TRIGGER update_stock_trigger AFTER
-INSERT
-    ON returns FOR EACH ROW
-EXECUTE FUNCTION update_stock_on_return ();
+-- Trigger para manejar devoluciones
+CREATE TRIGGER update_stock_on_order_return AFTER
+UPDATE OF estate ON order_info FOR EACH ROW
+EXECUTE FUNCTION update_stock_on_return_via_order ();
 
 --query ¿Qué porcentaje de las órdenes de cada cliente ha tenido problemas de stock (algún producto en la orden no estaba disponible al momento de la compra)?
 

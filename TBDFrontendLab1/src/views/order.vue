@@ -56,51 +56,62 @@ export default {
       this.$router.push("/logged");
     },
     fetchOrders() {
-      const clientId = this.userLogged.client_id;
+  const clientId = this.userLogged.client_id;
 
-      axios
-        .get(`http://localhost:8080/order/getByClientId/${clientId}`, {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
-        .then((response) => {
-          this.orders = response.data;
-        })
-        .catch((error) => {
-          console.error("Error al obtener las órdenes:", error);
-          if (error.response && error.response.status === 404) {
-            alert("No se encontraron órdenes para este cliente.");
-          } else {
-            alert("Hubo un problema al cargar las órdenes.");
-          }
-        });
-    },
-    createOrder() {
-      const clientId = this.userLogged.client_id;
+  axios
+    .get(`http://localhost:8080/order/getByClientId/${clientId}`, {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
+    })
+    .then((response) => {
+      // Filtrar las órdenes pendientes antes de asignarlas
+      this.orders = response.data.filter(order => order.estate === "pendiente");
+    })
+    .catch((error) => {
+      console.error("Error al obtener las órdenes:", error);
+      if (error.response && error.response.status === 404) {
+        alert("No se encontraron órdenes para este cliente.");
+      } else {
+        alert("Hubo un problema al cargar las órdenes.");
+      }
+    });
+},
 
-      const newOrder = {
-        order_date: new Date().toISOString(),
-        estate: "pendiente",
-        client_id: clientId,
-        total: 0.0,
-      };
+createOrder() {
+  // Verificar si ya existe una orden con estado pendiente
+  const hasPendingOrder = this.orders.some(order => order.estate === "pendiente");
 
-      axios
-        .post("http://localhost:8080/order/", newOrder, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-          },
-        })
-        .then((response) => {
-          this.orders.push(response.data);
-          alert("Orden creada exitosamente.");
-        })
-        .catch((error) => {
-          console.error("Error al crear la orden:", error);
-          alert("No se pudo crear la orden.");
-        });
-    },
+  if (hasPendingOrder) {
+    alert("Ya existe una orden pendiente. No se puede crear una nueva hasta que se complete.");
+    return; // Salir del método si ya hay una orden pendiente
+  }
+
+  const clientId = this.userLogged.client_id;
+
+  const newOrder = {
+    order_date: new Date().toISOString(),
+    estate: "pendiente",
+    client_id: clientId,
+    total: 0.0,
+  };
+
+  axios
+    .post("http://localhost:8080/order/", newOrder, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    })
+    .then((response) => {
+      this.orders.push(response.data);
+      alert("Orden creada exitosamente.");
+    })
+    .catch((error) => {
+      console.error("Error al crear la orden:", error);
+      alert("No se pudo crear la orden.");
+    });
+},
+
     viewOrderDetail(orderId) {
       // Redirige a la ruta con el ID de la orden
       this.$router.push(`/orderdetail/${orderId}`);

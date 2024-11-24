@@ -72,7 +72,7 @@
       <div class="modal-content">
         <h2>Seleccionar Orden</h2>
         <div v-if="orders.length === 0">
-          No tienes órdenes disponibles.
+          No tienes órdenes pendientes disponibles.
         </div>
         <div v-else>
           <ul>
@@ -82,7 +82,20 @@
               class="order-item"
             >
               <span>Orden ID: {{ order.order_id }}</span>
-              <button @click="addProductToOrder(order, selectedProduct)">
+              <!-- Selector de cantidad -->
+              <div class="quantity-selector">
+                <label for="quantity">Cantidad:</label>
+                <input
+                  type="number"
+                  min="1"
+                  :max="selectedProduct ? selectedProduct.stock : 1"
+                  v-model.number="selectedQuantity"
+                />
+              </div>
+              <button
+                @click="addProductToOrder(order, selectedProduct)"
+                :disabled="selectedQuantity < 1 || selectedQuantity > (selectedProduct ? selectedProduct.stock : 0)"
+              >
                 Seleccionar
               </button>
             </li>
@@ -108,6 +121,7 @@ export default {
       orders: [],
       showOrderModal: false,
       selectedProduct: null,
+      selectedQuantity: 1, // Nueva cantidad seleccionada
     };
   },
   methods: {
@@ -135,7 +149,8 @@ export default {
           },
         })
         .then((response) => {
-          this.orders = response.data;
+          // Filtrar las órdenes con estado "pendiente"
+          this.orders = response.data.filter(order => order.estate === "pendiente");
         })
         .catch((error) => {
           console.error("Error al obtener las órdenes:", error);
@@ -148,10 +163,15 @@ export default {
       this.showOrderModal = true;
     },
     addProductToOrder(order, product) {
+      if (order.estate !== "pendiente") {
+        alert("Solo puedes agregar productos a órdenes en estado pendiente.");
+        return;
+      }
+
       const detail = {
         order_id: order.order_id,
         product_id: product.product_id,
-        amount: 1, // Por simplicidad, ajusta según sea necesario
+        amount: this.selectedQuantity, // Usar la cantidad seleccionada
         unit_price: product.price,
       };
 
@@ -162,10 +182,11 @@ export default {
           },
         })
         .then(() => {
-          alert(`Producto "${product.name}" agregado a la orden ID ${order.order_id}`);
+          alert(
+            `Se agregaron ${this.selectedQuantity} unidades de "${product.product_name}" a la orden ID ${order.order_id}`
+          );
           this.closeOrderModal();
-          //recargar productos
-          this.fetchProducts();
+          this.fetchProducts(); // Recargar productos para actualizar el stock
         })
         .catch((error) => {
           console.error("Error al agregar producto a la orden:", error);
@@ -175,6 +196,7 @@ export default {
     closeOrderModal() {
       this.showOrderModal = false;
       this.selectedProduct = null;
+      this.selectedQuantity = 1; // Reiniciar la cantidad seleccionada
     },
     toggleIsLogged() {
       localStorage.removeItem("jwt");
@@ -193,6 +215,38 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Nueva clase para el selector de cantidad */
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quantity-selector input {
+  width: 60px;
+  padding: 5px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.order-buttons {
+  display: flex;
+  gap: 10px;
+}
 .container {
   padding: 20px;
   max-width: 1200px;

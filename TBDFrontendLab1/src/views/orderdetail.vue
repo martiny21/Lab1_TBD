@@ -1,4 +1,3 @@
-
 <template>
   <div class="order-details-container">
     <h1>Detalles de la Orden</h1>
@@ -31,12 +30,18 @@
         <div class="order-total">
           <h2>Total de la Orden: ${{ totalOrder.toFixed(2) }}</h2>
         </div>
-        <button @click="payOrder" class="btn btn-primary">Pagar</button>
+        <div v-if="orderState === 'pagada'">
+          <button @click="updateOrderState('devolucion')" class="btn btn-warning">Pedir Devolución</button>
+        </div>
+        <div v-else>
+          <button @click="updateOrderState('pagada')" class="btn btn-primary">Pagar</button>
+        </div>
         <button @click="goBack" class="btn btn-secondary">Volver Atrás</button>
       </div>
     </div>
   </div>
 </template>
+
 <script>
 import axios from "axios";
 
@@ -46,6 +51,7 @@ export default {
       loading: true,
       orderDetails: [],
       totalOrder: 0,
+      orderState: null, // Estado de la orden
     };
   },
   methods: {
@@ -53,6 +59,7 @@ export default {
       const orderId = this.$route.params.id;
 
       try {
+        // Obtener detalles de la orden
         const response = await axios.get(
           `http://localhost:8080/detail/getByOrderId/${orderId}`,
           {
@@ -64,6 +71,7 @@ export default {
 
         const details = response.data;
 
+        // Obtener información de cada producto
         for (let detail of details) {
           const productResponse = await axios.get(
             `http://localhost:8080/product/getById/${detail.product_id}`,
@@ -77,6 +85,18 @@ export default {
         }
 
         this.orderDetails = details;
+
+        // Obtener el estado de la orden
+        const orderResponse = await axios.get(
+          `http://localhost:8080/order/getById/${orderId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            },
+          }
+        );
+        this.orderState = orderResponse.data.estate;
+
         this.calculateTotal();
       } catch (error) {
         console.error("Error al cargar los detalles de la orden:", error);
@@ -91,15 +111,41 @@ export default {
         0
       );
     },
-    payOrder() {
-      alert("Orden pagada exitosamente. Redirigiendo a la página de inicio...");
-      this.$router.push("/logged");
+    async updateOrderState(newState) {
+      const orderId = this.$route.params.id;
+
+      try {
+        await axios.post(
+          `http://localhost:8080/order/update/${orderId}/${newState}`,
+          null, // No necesitas un cuerpo en este caso
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            },
+          }
+        );
+
+        alert(
+          `El estado de la orden ha sido actualizado a "${newState}".`
+        );
+        this.orderState = newState;
+
+        // Si es devolución, redirigir
+        if (newState === "devolucion") {
+          this.$router.push("/order");
+        }
+      } catch (error) {
+        console.error(
+          `Error al cambiar el estado de la orden a "${newState}":`,
+          error
+        );
+        alert("Hubo un problema al procesar la solicitud.");
+      }
     },
     goBack() {
-      this.$router.push("/order");
+      this.$router.push("/logged");
     },
   },
-
   created() {
     this.fetchOrderDetails();
   },
@@ -112,8 +158,8 @@ export default {
   margin: 0 auto;
   padding: 20px;
   text-align: center;
-  background-color: white; /* Fondo blanco */
-  color: black; /* Letras negras */
+  background-color: white;
+  color: black;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -128,7 +174,6 @@ h1 {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
-  background-color: white; /* Fondo blanco */
 }
 
 .order-details-table th,
@@ -136,7 +181,6 @@ h1 {
   border: 1px solid #ddd;
   padding: 12px;
   text-align: center;
-  color: black; /* Letras negras */
 }
 
 .order-details-table th {
@@ -155,7 +199,6 @@ h1 {
 .order-total {
   margin-top: 20px;
   font-size: 1.5rem;
-  color: black; /* Letras negras */
   font-weight: bold;
 }
 
@@ -172,5 +215,14 @@ h1 {
 
 .btn:hover {
   background-color: #0056b3;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  color: black;
+}
+
+.btn-warning:hover {
+  background-color: #d39e00;
 }
 </style>

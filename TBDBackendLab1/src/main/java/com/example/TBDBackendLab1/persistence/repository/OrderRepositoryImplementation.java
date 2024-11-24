@@ -15,11 +15,15 @@ public class OrderRepositoryImplementation implements OrderRepository {
 
     @Override
     public OrderEntity addOrder(OrderEntity order) {
-        String sql = "SET app.client_id = :client_id;" +
-                "INSERT INTO order_info (order_date, estate, client_id, total)" +
-                "VALUES ( :order_date, :estate, :client_id, :total)";
+        try (org.sql2o.Connection con = sql2o.beginTransaction()) { // Inicia una transacción
+            // Construye el comando SET app.client_id manualmente
+            String setClientIdQuery = "SET app.client_id = " + order.getClient_id();
+            con.createQuery(setClientIdQuery).executeUpdate();
 
-        try (org.sql2o.Connection con = sql2o.open()) {
+            // Ahora ejecuta la consulta de inserción
+            String sql = "INSERT INTO order_info (order_date, estate, client_id, total) " +
+                    "VALUES (:order_date, :estate, :client_id, :total)";
+
             Integer generatedId = (Integer) con.createQuery(sql, true)
                     .addParameter("order_date", order.getOrder_date())
                     .addParameter("estate", order.getEstate())
@@ -28,13 +32,18 @@ public class OrderRepositoryImplementation implements OrderRepository {
                     .executeUpdate()
                     .getKey();
 
+            // Establece el ID generado en la entidad Order
             order.setOrder_id(generatedId);
+
+            con.commit(); // Confirma la transacción
             return order;
         } catch (Exception e) {
             e.printStackTrace();
-            throw e; // Manejar la excepción si es necesario
+            throw new RuntimeException("Error al agregar la orden", e);
         }
     }
+
+
 
     @Override
     public OrderEntity getById(Integer order_id) {
@@ -67,19 +76,35 @@ public class OrderRepositoryImplementation implements OrderRepository {
     }
     @Override
     public boolean updateOrderEstate(Integer order_id, String estate) {
-        String sql = "UPDATE order_info " +
-                "SET estate = :estate " +
-                "WHERE order_id = :order_id";
-        try (org.sql2o.Connection con = sql2o.open()) {
+        try (org.sql2o.Connection con = sql2o.beginTransaction()) { // Inicia una transacción
+
+            // Obtén el client_id basado en el order_id
+            String getClientIdQuery = "SELECT client_id FROM order_info WHERE order_id = :order_id";
+            Integer clientId = con.createQuery(getClientIdQuery)
+                    .addParameter("order_id", order_id)
+                    .executeScalar(Integer.class);
+
+            // Construye el comando SET app.client_id manualmente
+            String setClientIdQuery = "SET app.client_id = " + clientId;
+            con.createQuery(setClientIdQuery).executeUpdate();
+
+            // Ahora ejecuta la consulta de actualización
+            String sql = "UPDATE order_info " +
+                    "SET estate = :estate " +
+                    "WHERE order_id = :order_id";
+
             con.createQuery(sql)
                     .addParameter("estate", estate)
                     .addParameter("order_id", order_id)
                     .executeUpdate();
-            return true;
+
+            con.commit(); // Confirma la transacción
+            return true; // Si todo es exitoso, retorna true
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            throw new RuntimeException("Error al actualizar el estado de la orden", e);
         }
     }
+
 
 }

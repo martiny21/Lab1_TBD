@@ -40,7 +40,7 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
-    @PostMapping("/update")
+    @PostMapping("/update/{id}/{status}")
     public boolean updateOrder(@PathVariable Integer id, @PathVariable String status){
         return orderService.updateOrder(status, id);
 
