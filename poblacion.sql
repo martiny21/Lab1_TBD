@@ -1,7 +1,5 @@
 -- Actualizar usuario administrador
-UPDATE client
-SET is_admin = true
-WHERE client_id = 1;
+UPDATE client SET is_admin = true WHERE client_id = 1;
 
 -- Insertar categorías
 INSERT INTO
@@ -19,7 +17,7 @@ INSERT INTO
         product_desc,
         price,
         stock,
-        estate,
+        state,
         category_id
     )
 VALUES (

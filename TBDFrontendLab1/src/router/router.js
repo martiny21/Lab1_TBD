@@ -11,6 +11,7 @@ import history from "../views/history.vue"
 import admin from "../views/admin.vue"
 import almacenado from "../views/alma.vue"
 import alerts from "../views/alerts.vue"
+import problem from "../views/IssuesProblem.vue"
 
 const routes = [
   {
@@ -74,6 +75,11 @@ const routes = [
     path: "/alerts",
     name: "alerts",
     component: alerts,
+  },
+  {
+    path: "/problem",
+    name: "problem",
+    component: problem,
   }
 ]
 

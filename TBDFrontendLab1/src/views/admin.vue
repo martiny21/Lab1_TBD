@@ -22,8 +22,8 @@
         </router-link>
       </button>
       <button>
-        <router-link class="button-link" to="/create">
-          Crear producto o categoria
+        <router-link class="button-link" to="/problem">
+          probelmas de stoc
         </router-link>
       </button>
     </div>

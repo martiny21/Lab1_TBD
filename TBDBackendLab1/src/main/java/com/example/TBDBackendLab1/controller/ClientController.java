@@ -3,6 +3,7 @@ package com.example.TBDBackendLab1.controller;
 import com.example.TBDBackendLab1.persistence.entity.ClientAlert;
 import com.example.TBDBackendLab1.persistence.entity.ClientEntity;
 import com.example.TBDBackendLab1.persistence.entity.ClientQueryReport;
+import com.example.TBDBackendLab1.persistence.entity.Client_p;
 import com.example.TBDBackendLab1.service.ClientService;
 import com.example.TBDBackendLab1.dto.LoginDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,5 +95,10 @@ public class ClientController {
     @GetMapping("/getAlerts")
     public List<ClientAlert> getClientAlerts(){
         return clientService.getClientAlerts();
+    }
+
+    @GetMapping("/geproblem")
+    public List<Client_p> getreport(){
+        return clientService.getreport();
     }
 }

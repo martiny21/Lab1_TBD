@@ -237,41 +237,45 @@ EXECUTE FUNCTION update_stock_on_return_via_order ();
 
 --query ¿Qué porcentaje de las órdenes de cada cliente ha tenido problemas de stock (algún producto en la orden no estaba disponible al momento de la compra)?
 
--- Crear la función para el trigger
-CREATE OR REPLACE FUNCTION update_problematic_order_on_stock_issue()
-RETURNS TRIGGER AS $$
-DECLARE
-    current_issues_count INT;
+CREATE TABLE stock_issues (
+    issue_id SERIAL PRIMARY KEY,
+    client_id INTEGER NOT NULL REFERENCES client (client_id),
+    order_id INTEGER NOT NULL REFERENCES order_info (order_id) ON DELETE CASCADE,
+    product_id INTEGER NOT NULL REFERENCES product (product_id),
+    issue_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    requested_amount INT NOT NULL,
+    available_stock INT NOT NULL
+);
+
+CREATE OR REPLACE FUNCTION get_stock_issue_percentage()
+RETURNS TABLE (
+    client_id INTEGER,
+    client_name VARCHAR(255),
+    total_orders INT,
+    problematic_orders INT,
+    issue_percentage NUMERIC
+) AS $$
 BEGIN
-    -- Verificar si el producto tiene un problema de stock
-    IF NEW.amount > (SELECT stock FROM product WHERE product_id = NEW.product_id) THEN
-        -- Obtener el conteo actual de problemas de stock para la orden
-        SELECT stock_issues_count
-        INTO current_issues_count
-        FROM problematic_order
-        WHERE order_id = NEW.order_id;
-
-        -- Si la orden ya existe en `problematic_order`, incrementar el conteo
-        IF FOUND THEN
-            UPDATE problematic_order
-            SET stock_issues_count = current_issues_count + 1
-            WHERE order_id = NEW.order_id;
-        ELSE
-            -- Si no existe, insertar una nueva entrada con 1 problema de stock
-            INSERT INTO problematic_order (order_id, stock_issues_count)
-            VALUES (NEW.order_id, 1);
-        END IF;
-    END IF;
-
-    RETURN NULL;
+    RETURN QUERY
+    SELECT
+        c.client_id,
+        c.client_name,
+        COUNT(DISTINCT o.order_id) AS total_orders,
+        COUNT(DISTINCT si.order_id) AS problematic_orders,
+        CASE
+            WHEN COUNT(DISTINCT o.order_id) = 0 THEN 0
+            ELSE ROUND(
+                (COUNT(DISTINCT si.order_id)::NUMERIC / COUNT(DISTINCT o.order_id)) * 100, 2
+            )
+        END AS issue_percentage
+    FROM
+        client c
+    LEFT JOIN order_info o ON o.client_id = c.client_id
+    LEFT JOIN stock_issues si ON si.order_id = o.order_id
+    GROUP BY c.client_id, c.client_name
+    ORDER BY issue_percentage DESC;
 END;
 $$ LANGUAGE plpgsql;
-
--- Crear el trigger
-CREATE TRIGGER trigger_add_problematic_order AFTER
-INSERT
-    ON order_detail FOR EACH ROW
-EXECUTE FUNCTION update_problematic_order_on_stock_issue ();
 
 CREATE OR REPLACE FUNCTION update_stock_and_order_total()
 RETURNS TRIGGER AS $$

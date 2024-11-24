@@ -3,6 +3,7 @@ package com.example.TBDBackendLab1.service;
 import com.example.TBDBackendLab1.persistence.entity.ClientAlert;
 import com.example.TBDBackendLab1.persistence.entity.ClientEntity;
 import com.example.TBDBackendLab1.persistence.entity.ClientQueryReport;
+import com.example.TBDBackendLab1.persistence.entity.Client_p;
 import com.example.TBDBackendLab1.persistence.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,4 +26,5 @@ public class ClientService {
     public List<ClientAlert> getClientAlerts(){
         return clientRepository.getClientAlerts();
     }
+    public List<Client_p> getreport(){return  clientRepository.getClientIssueReport();}
 }
