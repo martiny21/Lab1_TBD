@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "a8455dea-3533-43e5-a230-b6400d4ae08c",
+		"_postman_id": "37cfd4cf-7377-469d-acb3-eef05635af21",
 		"name": "TBD lab1",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "31497700"
+		"_exporter_id": "24728603"
 	},
 	"item": [
 		{
@@ -117,7 +117,7 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyMjI5MDYxLCJleHAiOjE3MzIyMjk2NjF9.pyM_Upezd44it6avUgZ93BQFv_xZC9u2KYwx1U5KpCM"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyNDcxOTg2LCJleHAiOjE3MzI0NzU1ODZ9.EOYrT_oHKkFtpygnlIak4TOYPQ2mGhzb8vZCy_P-ZN0"
 							}
 						},
 						"method": "GET",
@@ -147,7 +147,7 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyMjkwMjM5LCJleHAiOjE3MzIyOTM4Mzl9.LFHaHXG7-IAtAkQYVzhrFNDpI151wjVqAAuAmeyuLTM"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyNDcxOTg2LCJleHAiOjE3MzI0NzU1ODZ9.EOYrT_oHKkFtpygnlIak4TOYPQ2mGhzb8vZCy_P-ZN0"
 							}
 						},
 						"method": "GET",
@@ -177,7 +177,7 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyMjIzOTg5LCJleHAiOjE3MzIyMjQ1ODl9.c6ilneButuhCQW50E0jQeIpSQq8RL2fbk3tf76bxBSE"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyNDcwMzQ2LCJleHAiOjE3MzI0NzM5NDZ9.qALCzadmzTUP6C9K-Nl4qXdqcTc5BpGZMUuKobfshi4"
 							}
 						},
 						"method": "GET",
@@ -213,14 +213,14 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyMjI2MDk1LCJleHAiOjE3MzIyMjY2OTV9.Jqul9udikscIY4Btk9_zX8iPr8b4o3ipFd016Rx2B_8"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyNDcxOTg2LCJleHAiOjE3MzI0NzU1ODZ9.EOYrT_oHKkFtpygnlIak4TOYPQ2mGhzb8vZCy_P-ZN0"
 							}
 						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"category_name\": \"nombre de categoria\"\n}",
+							"raw": "{\n\t\"category_name\": \"test categoria\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -252,7 +252,7 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyMjkwMjM5LCJleHAiOjE3MzIyOTM4Mzl9.LFHaHXG7-IAtAkQYVzhrFNDpI151wjVqAAuAmeyuLTM"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyNDcxOTg2LCJleHAiOjE3MzI0NzU1ODZ9.EOYrT_oHKkFtpygnlIak4TOYPQ2mGhzb8vZCy_P-ZN0"
 							}
 						},
 						"method": "GET",
@@ -288,14 +288,14 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyMjg2NDU5LCJleHAiOjE3MzIyOTAwNTl9.uqDjx50sbZeCkQRnRlWFyCjDpbIZc_TJ9QAqgYiwpQ4"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyNDcxOTg2LCJleHAiOjE3MzI0NzU1ODZ9.EOYrT_oHKkFtpygnlIak4TOYPQ2mGhzb8vZCy_P-ZN0"
 							}
 						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"order_date\": \"2021-06-06T15:30:45\",\n    \"estate\": \"pendiente\",\n    \"client_id\": 1,\n    \"total\": 99.0\n}",
+							"raw": "{\n\t\"order_date\": \"2021-06-06T15:30:45\",\n    \"state\": \"pendiente\",\n    \"client_id\": 1,\n    \"total\": 99.0\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -327,7 +327,7 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyMjkwMjM5LCJleHAiOjE3MzIyOTM4Mzl9.LFHaHXG7-IAtAkQYVzhrFNDpI151wjVqAAuAmeyuLTM"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyNDcxOTg2LCJleHAiOjE3MzI0NzU1ODZ9.EOYrT_oHKkFtpygnlIak4TOYPQ2mGhzb8vZCy_P-ZN0"
 							}
 						},
 						"method": "GET",
@@ -357,12 +357,12 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyMjkwMjM5LCJleHAiOjE3MzIyOTM4Mzl9.LFHaHXG7-IAtAkQYVzhrFNDpI151wjVqAAuAmeyuLTM"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyNDcxOTg2LCJleHAiOjE3MzI0NzU1ODZ9.EOYrT_oHKkFtpygnlIak4TOYPQ2mGhzb8vZCy_P-ZN0"
 							}
 						},
 						"method": "GET",
 						"header": [],
-						"url": "localhost:8080/order/getById/6",
+						"url": "localhost:8080/order/getById/4",
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
 					},
 					"response": []
@@ -393,14 +393,14 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyMjkwMjM5LCJleHAiOjE3MzIyOTM4Mzl9.LFHaHXG7-IAtAkQYVzhrFNDpI151wjVqAAuAmeyuLTM"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyNDcxOTg2LCJleHAiOjE3MzI0NzU1ODZ9.EOYrT_oHKkFtpygnlIak4TOYPQ2mGhzb8vZCy_P-ZN0"
 							}
 						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"order_id\": 4,\n    \"product_id\": 2,\n    \"amount\": 100,\n    \"unit_price\": 10.0\n}",
+							"raw": "{\n\t\"order_id\": 4,\n    \"product_id\": 2,\n    \"amount\": 10,\n    \"unit_price\": 10.0\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -432,12 +432,12 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyMjkwMjM5LCJleHAiOjE3MzIyOTM4Mzl9.LFHaHXG7-IAtAkQYVzhrFNDpI151wjVqAAuAmeyuLTM"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyNDcxOTg2LCJleHAiOjE3MzI0NzU1ODZ9.EOYrT_oHKkFtpygnlIak4TOYPQ2mGhzb8vZCy_P-ZN0"
 							}
 						},
 						"method": "GET",
 						"header": [],
-						"url": "localhost:8080/detail/getById/3",
+						"url": "localhost:8080/detail/getById/7",
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
 					},
 					"response": []
@@ -462,7 +462,7 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyMjkwMjM5LCJleHAiOjE3MzIyOTM4Mzl9.LFHaHXG7-IAtAkQYVzhrFNDpI151wjVqAAuAmeyuLTM"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyNDcxOTg2LCJleHAiOjE3MzI0NzU1ODZ9.EOYrT_oHKkFtpygnlIak4TOYPQ2mGhzb8vZCy_P-ZN0"
 							}
 						},
 						"method": "GET",
@@ -492,7 +492,7 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyMjkwMjM5LCJleHAiOjE3MzIyOTM4Mzl9.LFHaHXG7-IAtAkQYVzhrFNDpI151wjVqAAuAmeyuLTM"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyNDcxOTg2LCJleHAiOjE3MzI0NzU1ODZ9.EOYrT_oHKkFtpygnlIak4TOYPQ2mGhzb8vZCy_P-ZN0"
 							}
 						},
 						"method": "GET",
@@ -528,14 +528,14 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyMjg1NjUzLCJleHAiOjE3MzIyODYyNTN9.t4MQvvkpg9kL88fDj2ZaL930AhDU6_tKSjAsSffUcXQ"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyNDcxOTg2LCJleHAiOjE3MzI0NzU1ODZ9.EOYrT_oHKkFtpygnlIak4TOYPQ2mGhzb8vZCy_P-ZN0"
 							}
 						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"product_name\": \"Celular\",\n  \"product_desc\": \"samsung phone S21\",\n  \"price\": 1000,\n  \"stock\": 80,\n  \"estate\": \"disponible\",\n  \"category_id\": 1\n}",
+							"raw": "{\n  \"product_name\": \"Celular\",\n  \"product_desc\": \"samsung phone S21\",\n  \"price\": 1000,\n  \"stock\": 80,\n  \"state\": \"disponible\",\n  \"category_id\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -567,20 +567,11 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyMjkwMjM5LCJleHAiOjE3MzIyOTM4Mzl9.LFHaHXG7-IAtAkQYVzhrFNDpI151wjVqAAuAmeyuLTM"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyNDcxOTg2LCJleHAiOjE3MzI0NzU1ODZ9.EOYrT_oHKkFtpygnlIak4TOYPQ2mGhzb8vZCy_P-ZN0"
 							}
 						},
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": "localhost:8080/product/getById/2",
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
 					},
@@ -606,7 +597,7 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyMjkwMjM5LCJleHAiOjE3MzIyOTM4Mzl9.LFHaHXG7-IAtAkQYVzhrFNDpI151wjVqAAuAmeyuLTM"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaWNvbGFzQHVzYWNoLmNsIiwiaXNzIjoiYXBwIiwiaWF0IjoxNzMyNDcxOTg2LCJleHAiOjE3MzI0NzU1ODZ9.EOYrT_oHKkFtpygnlIak4TOYPQ2mGhzb8vZCy_P-ZN0"
 							}
 						},
 						"method": "GET",
