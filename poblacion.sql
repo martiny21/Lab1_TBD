@@ -1,5 +1,7 @@
 -- Actualizar usuario administrador
-UPDATE client SET is_admin = true WHERE client_id = 1;
+INSERT INTO
+    client (client_id, client_name, direction, email, client_number, client_password, is_admin)
+VALUES (1, 'admin', 'admin', 'admin@gmail.com', '+56912345678', '$2a$10$ttamfhlAvqrzcdztH4iEIezjv9AdnP34bBniL36WvgooPxnsymC3G', true);
 
 -- Insertar categorías
 INSERT INTO
@@ -10,7 +12,7 @@ VALUES ('Electrónica'),
     ('Juguetes'),
     ('Libros');
 
--- Insertar productos
+-- Insertar Productos
 INSERT INTO
     product (
         product_name,
