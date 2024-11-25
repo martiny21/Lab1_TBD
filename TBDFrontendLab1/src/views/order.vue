@@ -57,29 +57,29 @@ export default {
     goToHome() {
       this.$router.push("/logged");
     },
-    fetchOrders() {
-      const clientId = this.userLogged.client_id;
+    async fetchOrders() {
+  const clientId = this.userLogged.client_id;
 
-      axios
-        .get(`http://localhost:8080/order/getByClientId/${clientId}`, {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
-        .then((response) => {
-          this.orders = response.data.filter(
-            (order) => order.state === "pendiente"
-          );
-        })
-        .catch((error) => {
-          console.error("Error al obtener las órdenes:", error);
-          if (error.response && error.response.status === 404) {
-            alert("No se encontraron órdenes para este cliente.");
-          } else {
-            alert("Hubo un problema al cargar las órdenes.");
-          }
-        });
-    },
+  await axios
+    .get(`http://localhost:8080/order/getByClientId/${clientId}`, {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
+    })
+    .then((response) => {
+      // Filtrar las órdenes pendientes antes de asignarlas
+      this.orders = response.data.filter(order => order.state === "pendiente");
+    })
+    .catch((error) => {
+      console.error("Error al obtener las órdenes:", error);
+      if (error.response && error.response.status === 404) {
+        alert("No se encontraron órdenes para este cliente.");
+      } else {
+        alert("Hubo un problema al cargar las órdenes.");
+      }
+    });
+},
+    
     createOrder() {
       const hasPendingOrder = this.orders.some(
         (order) => order.state === "pendiente"
@@ -122,7 +122,7 @@ export default {
     async applyReturnAndDelete(orderId) {
       if (confirm(`¿Estás seguro de que deseas eliminar la orden ?`)) {
   // Cambiar el estado de la orden a "devolución"
-  axios
+  await axios
     .post(
       `http://localhost:8080/order/update/${orderId}/devolucion`,
       null,
@@ -157,12 +157,11 @@ export default {
       alert("Hubo un problema al procesar la solicitud.");
     });
 }
-
+    },
   },
   created() {
     this.fetchOrders();
   },
-}
 };
 </script>
 
