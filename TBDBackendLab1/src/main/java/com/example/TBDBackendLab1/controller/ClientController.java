@@ -99,6 +99,6 @@ public class ClientController {
 
     @GetMapping("/geproblem")
     public List<Client_p> getreport(){
-        return clientService.getreport();
+        return clientService.getproblem();
     }
 }

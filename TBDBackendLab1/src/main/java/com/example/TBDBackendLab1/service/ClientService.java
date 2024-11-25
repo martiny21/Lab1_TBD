@@ -26,5 +26,5 @@ public class ClientService {
     public List<ClientAlert> getClientAlerts(){
         return clientRepository.getClientAlerts();
     }
-    public List<Client_p> getreport(){return  clientRepository.getClientIssueReport();}
+    public List<Client_p> getproblem(){return  clientRepository.getClientIssueReport();}
 }
