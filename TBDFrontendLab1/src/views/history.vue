@@ -5,13 +5,7 @@
         <h1>Órdenes del Cliente</h1>
       </header>
       <section>
-        <button class="btn btn-primary" @click="fetchOrders">
-          Buscar Órdenes
-        </button>
 
-        <button class="btn btn-secondary" @click="createOrder">
-          Crear Nueva Orden
-        </button>
 
         <div v-if="orders.length === 0" class="no-orders">
           No hay órdenes disponibles para el cliente.

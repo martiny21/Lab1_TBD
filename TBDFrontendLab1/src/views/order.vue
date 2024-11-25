@@ -5,9 +5,7 @@
       <h1>Órdenes del Cliente</h1>
     </header>
     <section>
-      <button class="btn btn-primary" @click="fetchOrders">
-        Buscar Órdenes
-      </button>
+
 
       <button class="btn btn-secondary" @click="createOrder">
         Crear Nueva Orden
