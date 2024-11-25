@@ -27,5 +27,7 @@ public class OrderService {
 
     public boolean updateOrder(String status, Integer order_id){return orderRepository.updateOrderState(order_id,status);}
 
+    public boolean deleteOrder(Integer order_id){return orderRepository.deleteOrder(order_id);}
+
     }
 

@@ -5,8 +5,6 @@
       <h1>Órdenes del Cliente</h1>
     </header>
     <section>
-
-
       <button class="btn btn-secondary" @click="createOrder">
         Crear Nueva Orden
       </button>
@@ -31,12 +29,18 @@
           >
             Ver más detalles
           </button>
+          <!-- Botón para devolver y eliminar orden -->
+          <button
+            class="btn btn-danger"
+            @click="applyReturnAndDelete(order.order_id)"
+          >
+             Eliminar
+          </button>
         </div>
       </div>
     </section>
   </div>
 </template>
-
 
 <script>
 import axios from "axios";
@@ -54,73 +58,113 @@ export default {
       this.$router.push("/logged");
     },
     fetchOrders() {
-  const clientId = this.userLogged.client_id;
+      const clientId = this.userLogged.client_id;
 
-  axios
-    .get(`http://localhost:8080/order/getByClientId/${clientId}`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-      },
-    })
-    .then((response) => {
-      // Filtrar las órdenes pendientes antes de asignarlas
-      this.orders = response.data.filter(order => order.state === "pendiente");
-    })
-    .catch((error) => {
-      console.error("Error al obtener las órdenes:", error);
-      if (error.response && error.response.status === 404) {
-        alert("No se encontraron órdenes para este cliente.");
-      } else {
-        alert("Hubo un problema al cargar las órdenes.");
+      axios
+        .get(`http://localhost:8080/order/getByClientId/${clientId}`, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          this.orders = response.data.filter(
+            (order) => order.state === "pendiente"
+          );
+        })
+        .catch((error) => {
+          console.error("Error al obtener las órdenes:", error);
+          if (error.response && error.response.status === 404) {
+            alert("No se encontraron órdenes para este cliente.");
+          } else {
+            alert("Hubo un problema al cargar las órdenes.");
+          }
+        });
+    },
+    createOrder() {
+      const hasPendingOrder = this.orders.some(
+        (order) => order.state === "pendiente"
+      );
+
+      if (hasPendingOrder) {
+        alert(
+          "Ya existe una orden pendiente. No se puede crear una nueva hasta que se complete."
+        );
+        return;
       }
-    });
-},
 
-createOrder() {
-  // Verificar si ya existe una orden con estado pendiente
-  const hasPendingOrder = this.orders.some(order => order.state === "pendiente");
+      const clientId = this.userLogged.client_id;
 
-  if (hasPendingOrder) {
-    alert("Ya existe una orden pendiente. No se puede crear una nueva hasta que se complete.");
-    return; // Salir del método si ya hay una orden pendiente
-  }
+      const newOrder = {
+        order_date: new Date().toISOString(),
+        state: "pendiente",
+        client_id: clientId,
+        total: 0.0,
+      };
 
-  const clientId = this.userLogged.client_id;
-
-  const newOrder = {
-    order_date: new Date().toISOString(),
-    state: "pendiente",
-    client_id: clientId,
-    total: 0.0,
-  };
-
-  axios
-    .post("http://localhost:8080/order/", newOrder, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    })
-    .then((response) => {
-      this.orders.push(response.data);
-      alert("Orden creada exitosamente.");
-    })
-    .catch((error) => {
-      console.error("Error al crear la orden:", error);
-      alert("No se pudo crear la orden.");
-    });
-},
-
+      axios
+        .post("http://localhost:8080/order/", newOrder, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
+        })
+        .then((response) => {
+          this.orders.push(response.data);
+          alert("Orden creada exitosamente.");
+        })
+        .catch((error) => {
+          console.error("Error al crear la orden:", error);
+          alert("No se pudo crear la orden.");
+        });
+    },
     viewOrderDetail(orderId) {
-      // Redirige a la ruta con el ID de la orden
       this.$router.push(`/orderdetail/${orderId}`);
     },
+    async applyReturnAndDelete(orderId) {
+      if (confirm(`¿Estás seguro de que deseas eliminar la orden ?`)) {
+  // Cambiar el estado de la orden a "devolución"
+  axios
+    .post(
+      `http://localhost:8080/order/update/${orderId}/devolucion`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      }
+    )
+    .then(() => {
+      
+
+      // Eliminar la orden después de marcarla como devolución
+      return axios.post(
+        `http://localhost:8080/order/delete/${orderId}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      );
+    })
+    .then(() => {
+      alert(`La orden ${orderId} ha sido eliminada exitosamente.`);
+
+      // Actualizar la lista de órdenes después de la eliminación
+      this.fetchOrders();
+    })
+    .catch((error) => {
+      console.error("Error al procesar la devolución o eliminación:", error);
+      alert("Hubo un problema al procesar la solicitud.");
+    });
+}
+
   },
   created() {
     this.fetchOrders();
   },
+}
 };
 </script>
-
 
 <style scoped>
 .container {

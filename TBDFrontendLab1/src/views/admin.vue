@@ -23,7 +23,7 @@
       </button>
       <button>
         <router-link class="button-link" to="/problem">
-          probelmas de stoc
+          Problemas de stock
         </router-link>
       </button>
     </div>

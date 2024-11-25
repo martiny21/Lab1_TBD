@@ -46,5 +46,10 @@ public class OrderController {
 
     }
 
+    @PostMapping("/delete/{orderId}")
+    public boolean deleteOrder(@PathVariable Integer orderId){
+        return orderService.deleteOrder(orderId);
+    }
+
 
 }
