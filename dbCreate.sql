@@ -1,3 +1,6 @@
+CREATE DATABASE ecommerce;
+\c ecommerce;
+
 -- Crear tabla categoría
 CREATE TABLE category (
     category_id SERIAL PRIMARY KEY,
@@ -64,7 +67,7 @@ CREATE TABLE order_detail (
     unit_price DECIMAL(10, 2) NOT NULL CHECK (unit_price >= 0)
 );
 
--- Crear tabla bitacora de inserción
+
 -- Crear tabla para registrar auditorías de inserciones y cambios
 CREATE TABLE audit_log (
     insertion_id SERIAL PRIMARY KEY, -- Identificador único para cada entrada de auditoría
@@ -77,6 +80,7 @@ CREATE TABLE audit_log (
     new_data JSONB -- Datos nuevos en caso de INSERT o UPDATE
 );
 
+-- Crear tabla para las alertas
 CREATE TABLE shop_alerts (
     alert_id SERIAL PRIMARY KEY,
     client_id INTEGER NOT NULL REFERENCES client (client_id),
@@ -90,6 +94,7 @@ CREATE TABLE problematic_order (
     stock_issues_count INT NOT NULL DEFAULT 0 CHECK (stock_issues_count >= 0)
 );
 
+-- Crear insertion triggert function
 CREATE OR REPLACE FUNCTION insertion_trigger_function()
 RETURNS TRIGGER AS $$
 DECLARE
